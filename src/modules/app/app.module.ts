@@ -1,3 +1,4 @@
+import { AuthModule } from "./../auth/auth.module";
 import { GlobalModule } from "../../common/module";
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
@@ -7,6 +8,7 @@ import configuration from "src/config/configuration";
 
 @Module({
   imports: [
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
