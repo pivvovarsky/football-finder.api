@@ -1,0 +1,9 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "assets": ["generated/prisma"],
+    "watchAssets": true
+  },
+  "entryFile": "worker.ts"
+}
