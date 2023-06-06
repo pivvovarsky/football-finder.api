@@ -2,7 +2,7 @@ import { INestApplication, Injectable, OnModuleInit } from "@nestjs/common";
 import { PrismaClient } from "src/generated/prisma/client/mongo";
 
 @Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit {
+export class MongoPrismaService extends PrismaClient implements OnModuleInit {
   constructor() {
     super({ log: ["info", "error"] });
   }

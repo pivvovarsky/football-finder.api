@@ -2,6 +2,7 @@ export interface IConfig {
   api: {
     port: number;
     prefix: string;
+    version: string;
   };
   swagger: {
     title: string;
