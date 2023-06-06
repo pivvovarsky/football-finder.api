@@ -21,6 +21,7 @@ export interface IConfig {
       authProviderX509CertUrl: string;
       clientC509CertUrl: string;
     };
+    storageBucket: string;
   };
   mailer: {
     transport: {

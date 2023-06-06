@@ -1,3 +1,6 @@
+import { FirebaseStorageService } from "./../../common/services/firebase/firebase-storage.service";
+import { FirebaseAuthService } from "./../../common/services/firebase/firebase-auth.service";
+import { FirebaseService } from "./../../common/services/firebase/firebase.service";
 import { AuthModule } from "./../auth/auth.module";
 import { GlobalModule } from "../../common/module";
 import { Module } from "@nestjs/common";
@@ -16,6 +19,6 @@ import configuration from "src/config/configuration";
     GlobalModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [FirebaseStorageService, FirebaseAuthService, FirebaseService, AppService],
 })
 export class AppModule {}

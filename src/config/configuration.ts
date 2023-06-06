@@ -12,6 +12,7 @@ export default (): IConfig => ({
   },
   firebase: {
     config: JSON.parse(process.env.FIREBASE_CONFIG),
+    storageBucket: process.env.FIREBASE_BUCKET ?? "",
   },
   mailer: {
     transport: {
