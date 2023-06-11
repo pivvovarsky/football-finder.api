@@ -85,4 +85,8 @@ export class AuthService {
         });
     } else throw new NotFoundException();
   }
+
+  public async changePassword(data: { id: string; newPassword: string }): Promise<void> {
+    await this.firebaseAuthSerivce.changePassword(data);
+  }
 }

@@ -2,7 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import firebase from "firebase-admin";
 import { FirebaseService } from "./firebase.service";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
@@ -52,5 +52,16 @@ export class FirebaseAuthService {
 
   public async generateResetPasswordLink(email: string): Promise<string> {
     return await this.auth.generatePasswordResetLink(email);
+  }
+
+  public async changePassword(body: { id: string; newPassword: string }): Promise<void> {
+    const { id, newPassword } = body;
+    try {
+      await this.auth.updateUser(id, {
+        password: newPassword,
+      });
+    } catch (error: any) {
+      throw new NotFoundException(error);
+    }
   }
 }
