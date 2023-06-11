@@ -1,5 +1,5 @@
 export * from "./api-config.service";
-export * from "./prisma.service";
+export * from "./mongo-prisma.service";
 
 // Firebase
 export * from "./firebase/firebase.service";

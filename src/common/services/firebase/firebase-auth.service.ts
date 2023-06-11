@@ -6,6 +6,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import firebase from "firebase-admin";
 import { FirebaseService } from "./firebase.service";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
+import { UserRecord } from "firebase-admin/lib/auth/user-record";
 
 @Injectable()
 export class FirebaseAuthService {
@@ -21,5 +22,35 @@ export class FirebaseAuthService {
       throw new UnauthorizedException();
     }
     return firebaseUser;
+  }
+
+  public async createUser(body: {
+    email: string;
+    password: string;
+    firstName?: string;
+    lastName?: string;
+  }): Promise<UserRecord> {
+    const { email, password, firstName, lastName } = body;
+
+    const user = await this.auth.createUser({
+      email,
+      password,
+      emailVerified: false,
+      displayName: `${firstName ?? ""} ${lastName ?? ""}`,
+    });
+
+    return user;
+  }
+
+  public async getActivationLink(email: string): Promise<string> {
+    return await this.auth.generateEmailVerificationLink(email);
+  }
+
+  public async getUserByEmail(email: string) {
+    return await this.auth.getUserByEmail(email);
+  }
+
+  public async generateResetPasswordLink(email: string): Promise<string> {
+    return await this.auth.generatePasswordResetLink(email);
   }
 }

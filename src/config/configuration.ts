@@ -4,6 +4,7 @@ export default (): IConfig => ({
   api: {
     port: parseInt(process.env.APP_PORT) || 8080,
     prefix: "api",
+    version: "1",
   },
   swagger: {
     title: "Football Finder",
@@ -24,7 +25,7 @@ export default (): IConfig => ({
       },
     },
     defaults: {
-      from: `"No-reply" <mailerservice12@gmail.com>`,
+      from: ` Fotball Finder "No-reply" <mailerservice12@gmail.com>`,
     },
   },
 });
