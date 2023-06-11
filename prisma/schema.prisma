@@ -18,4 +18,114 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  favoriteStadiums FavoriteStadium[]
+  favoriteMatches  FavoriteMatch[]
+  favoriteTeams    FavoriteTeam[]
+  ratings          Rating[]
+  contactForms     ContactForm[]
+  Settings         Settings?
+}
+
+model Team {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  imageUrl     String
+  information  String?
+  favoriteTeam FavoriteTeam[]
+
+  hostMatches  Match[] @relation("MatchHost")
+  guestMatches Match[] @relation("MatchGuest")
+}
+
+model Stadium {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  latitude        Float
+  longitude       Float
+  information     String?
+  ratings         Rating[]
+  matches         Match[]
+  favoriteStadium FavoriteStadium[]
+}
+
+model Match {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  stadium   Stadium @relation(fields: [stadiumId], references: [id])
+  stadiumId String  @db.ObjectId
+  host      Team    @relation("MatchHost", fields: [hostId], references: [id])
+  hostId    String  @db.ObjectId
+  guest     Team    @relation("MatchGuest", fields: [guestId], references: [id])
+  guestId   String  @db.ObjectId
+  result    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  favoriteMatch FavoriteMatch[]
+}
+
+model Rating {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String  @unique
+  stadium   Stadium @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  stadiumId String  @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FavoriteMatch {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String @unique
+  match   Match  @relation(fields: [matchId], references: [id])
+  matchId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FavoriteStadium {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String  @unique
+  stadium   Stadium @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  stadiumId String  @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FavoriteTeam {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactForm {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String @unique
+  content String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Settings {
+  id                       String  @id @default(auto()) @map("_id") @db.ObjectId
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                   String  @unique
+  latitude                 Float
+  longitude                Float
+  matchNotificationEnabled Boolean @default(false)
+
+  updatedAt DateTime @updatedAt
 }
