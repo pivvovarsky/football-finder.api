@@ -31,7 +31,7 @@ export class AuthService {
 
     return await this.prismaService.user.create({
       data: {
-        id: "xd",
+        id: firebaseUser.uid,
         firstName: firstName ?? "",
         lastName: lastName ?? "",
       },

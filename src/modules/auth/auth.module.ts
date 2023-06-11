@@ -9,7 +9,7 @@ import { Module } from "@nestjs/common";
 import { FirebaseStrategy } from "./strategy/firebase.strategy";
 
 @Module({
-  imports: [PassportModule.register({})],
+  imports: [PassportModule.register({ defaultStrategy: "firebase-jwt" })],
   controllers: [AuthController],
   providers: [AuthService, FirebaseStrategy],
   exports: [PassportModule],

@@ -12,7 +12,6 @@ export class FirebaseStrategy extends PassportStrategy(Strategy, "firebase-jwt")
   }
 
   async validate(token: string) {
-    console.log("token wrzucany", token);
     return await this.firebaseAuthService.verifyToken(token);
   }
 }
