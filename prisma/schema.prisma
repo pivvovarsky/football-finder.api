@@ -30,12 +30,15 @@ model User {
 model Team {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
   name         String
-  imageUrl     String
+  imageUrl     String?
   information  String?
   favoriteTeam FavoriteTeam[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  hostMatches  Match[]        @relation("MatchHost")
+  guestMatches Match[]        @relation("MatchGuest")
 
-  hostMatches  Match[] @relation("MatchHost")
-  guestMatches Match[] @relation("MatchGuest")
+  stadium Stadium? @relation("TeamStadium")
 }
 
 model Stadium {
@@ -44,9 +47,14 @@ model Stadium {
   latitude        Float
   longitude       Float
   information     String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
   ratings         Rating[]
   matches         Match[]
   favoriteStadium FavoriteStadium[]
+
+  teamId String @unique @db.ObjectId
+  team   Team   @relation("TeamStadium", fields: [teamId], references: [id])
 }
 
 model Match {
