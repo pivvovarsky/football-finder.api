@@ -1,11 +1,19 @@
 # football-finder.api
 
-Football Finder app by Szczepan Piwowarski
+Football Finder App
+Author: Szczepan Piwowarski
+
+## Requirements
+
+- Node v16
 
 ## Installation
 
 ```bash
 $ npm install
+
+# not necessary but useful
+$ npm i -g @nestjs/cli
 ```
 
 ## Running the app
