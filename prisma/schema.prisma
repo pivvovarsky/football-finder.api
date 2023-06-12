@@ -24,48 +24,50 @@ model User {
   favoriteTeams    FavoriteTeam[]
   ratings          Rating[]
   contactForms     ContactForm[]
-  Settings         Settings?
+  settings         Settings?
 }
 
 model Team {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   imageUrl     String?
-  information  String?
-  favoriteTeam FavoriteTeam[]
+  description  String?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   hostMatches  Match[]        @relation("MatchHost")
   guestMatches Match[]        @relation("MatchGuest")
+  favoriteTeam FavoriteTeam[]
 
   stadium Stadium? @relation("TeamStadium")
 }
 
 model Stadium {
-  id              String            @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  latitude        Float
-  longitude       Float
-  information     String?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  ratings         Rating[]
-  matches         Match[]
-  favoriteStadium FavoriteStadium[]
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  latitude    Float
+  longitude   Float
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  ratings     Rating[]
+  matches     Match[]
 
-  teamId String @unique @db.ObjectId
-  team   Team   @relation("TeamStadium", fields: [teamId], references: [id])
+  teamId          String            @unique @db.ObjectId
+  team            Team              @relation("TeamStadium", fields: [teamId], references: [id])
+  FavoriteStadium FavoriteStadium[]
 }
 
 model Match {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  stadium   Stadium @relation(fields: [stadiumId], references: [id])
-  stadiumId String  @db.ObjectId
-  host      Team    @relation("MatchHost", fields: [hostId], references: [id])
-  hostId    String  @db.ObjectId
-  guest     Team    @relation("MatchGuest", fields: [guestId], references: [id])
-  guestId   String  @db.ObjectId
-  result    String?
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  stadium    Stadium  @relation(fields: [stadiumId], references: [id])
+  stadiumId  String   @db.ObjectId
+  host       Team     @relation("MatchHost", fields: [hostId], references: [id])
+  hostId     String   @db.ObjectId
+  guest      Team     @relation("MatchGuest", fields: [guestId], references: [id])
+  guestId    String   @db.ObjectId
+  hostGoals  Int
+  guestGoals Int
+  date       DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -89,7 +91,7 @@ model FavoriteMatch {
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String @unique
   match   Match  @relation(fields: [matchId], references: [id])
-  matchId String @db.ObjectId
+  matchId String @unique @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -100,7 +102,7 @@ model FavoriteStadium {
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String  @unique
   stadium   Stadium @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
-  stadiumId String  @db.ObjectId
+  stadiumId String  @unique @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -118,10 +120,11 @@ model FavoriteTeam {
 }
 
 model ContactForm {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  String @unique
-  content String
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String  @unique
+  title   String?
+  message String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -135,5 +138,6 @@ model Settings {
   longitude                Float
   matchNotificationEnabled Boolean @default(false)
 
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
