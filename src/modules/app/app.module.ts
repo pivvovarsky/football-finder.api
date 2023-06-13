@@ -1,3 +1,4 @@
+import { TeamsModule } from "./../teams/teams.module";
 import { AuthModule } from "./../auth/auth.module";
 import { GlobalModule } from "../../common/module";
 import { Module } from "@nestjs/common";
@@ -15,6 +16,7 @@ import { FirebaseExceptionsFilter, PrismaExceptionsFilter } from "src/common/fil
 
 @Module({
   imports: [
+    TeamsModule,
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
