@@ -3,7 +3,7 @@ https://docs.nestjs.com/providers#services
 */
 
 import { Injectable } from "@nestjs/common";
-import firebase, { storage } from "firebase-admin";
+import firebase from "firebase-admin";
 import { FirebaseService } from "./firebase.service";
 import multer from "multer";
 
