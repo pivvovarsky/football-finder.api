@@ -18,7 +18,7 @@ export class StadiumItem implements Stadium {
   longitude: number;
 
   @ApiProperty()
-  information: string;
+  description: string;
 
   @ApiProperty()
   createdAt: Date;

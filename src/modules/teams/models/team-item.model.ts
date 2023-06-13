@@ -4,7 +4,7 @@ import { Stadium, Team as TeamModel } from "src/generated/prisma/client/mongo";
 
 export class TeamItem implements TeamModel {
   @ApiProperty()
-  information: string | null;
+  description: string | null;
 
   @ApiProperty()
   id: string;

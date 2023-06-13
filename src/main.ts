@@ -4,6 +4,7 @@ import { ApiConfigService, MongoPrismaService } from "./common/services";
 import helmet from "helmet";
 import { setupSwagger } from "./config/setup-swagger";
 import { NestExpressApplication } from "@nestjs/platform-express";
+import { ValidationPipe } from "@nestjs/common";
 
 declare const module: any;
 
@@ -13,7 +14,7 @@ async function bootstrap() {
   app.use(helmet());
   app.enableCors();
   app.setGlobalPrefix(configService.api.prefix);
-  // app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const prismaService: MongoPrismaService = app.get(MongoPrismaService);
   prismaService.enableShutdownHooks(app);
