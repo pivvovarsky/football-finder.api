@@ -1,12 +1,14 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
-import { ChangePasswordDto, ForgotPasswordDto, RegisterDto } from "./dto";
-import { AuthPayload } from "./models";
 import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
 import { Public } from "src/common/decorators/public.decorator";
 import { Operation } from "src/common/enums/Operation";
 import { User } from "src/common/decorators/user.decorator";
+import { RegisterDto } from "./dto/register.dto";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
+import { AuthPayload } from "./models/auth-payload.model";
+import { ChangePasswordDto } from "./dto/change-password.dto";
 @Public()
 @ApiTags("auth")
 @Controller("auth")

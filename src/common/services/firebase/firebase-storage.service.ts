@@ -1,11 +1,6 @@
-/*
-https://docs.nestjs.com/providers#services
-*/
-
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import firebase from "firebase-admin";
 import { FirebaseService } from "./firebase.service";
-import multer from "multer";
 
 @Injectable()
 export class FirebaseStorageService {
@@ -16,7 +11,7 @@ export class FirebaseStorageService {
   }
 
   public async uploadImage(id: string, file: Express.Multer.File) {
-    const storageRef = this.storage.bucket().file(`teams/${id}/${file.originalname}`);
+    const storageRef = this.storage.bucket().file(`teams/images/${id}`);
 
     await storageRef.save(file.buffer, {
       contentType: file.mimetype,
@@ -29,5 +24,19 @@ export class FirebaseStorageService {
     });
 
     return imageUrl[0];
+  }
+
+  public async getImageUrl(id: string) {
+    const storageRef = this.storage.bucket().file(`teams/images/${id}`);
+    if (!storageRef) {
+      throw new NotFoundException();
+    }
+    return await storageRef.get();
+  }
+
+  public async deleteImage(id: string) {
+    const storageRef = this.storage.bucket().file(`teams/images/${id}`);
+
+    return await storageRef.delete();
   }
 }

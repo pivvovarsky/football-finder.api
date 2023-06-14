@@ -13,5 +13,11 @@ export class FirebaseExceptionsFilter extends BaseExceptionFilter {
       timestamp: new Date().toISOString(),
       errors: exception.message,
     });
+
+    response.status(HttpStatus.NOT_FOUND).json({
+      statusCode: HttpStatus.NOT_FOUND,
+      timestamp: new Date().toISOString(),
+      errors: exception.message,
+    });
   }
 }

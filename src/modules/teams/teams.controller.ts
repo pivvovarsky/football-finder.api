@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { TeamsService } from "./teams.service";
-import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Team } from "src/generated/prisma/client/mongo";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateTeamDto } from "./dto/update-team.dto";
 import { CreateTeamDto } from "./dto/create-team.dto";
+import { ApiKeyGuard } from "src/common/decorators/guards/api-key.decorator";
 
 // @FirebaseJWTGuard()
 @ApiTags("teams")
@@ -53,5 +54,12 @@ export class TeamsController {
   @UseInterceptors(FileInterceptor("file"))
   async uploadImage(@Param("id") id: string, @UploadedFile() file: Express.Multer.File) {
     return await this.teamsService.uploadImage(id, file);
+  }
+
+  @ApiKeyGuard()
+  @ApiOperation({ summary: "protected by api-key guard" })
+  @Get(":id/imageUrl")
+  async getUrlImage(@Param("id") id: string) {
+    return await this.teamsService.getUrlImage(id);
   }
 }

@@ -28,4 +28,5 @@ export default (): IConfig => ({
       from: ` Fotball Finder "No-reply" <mailerservice12@gmail.com>`,
     },
   },
+  apiKey: process.env.API_KEY || "",
 });

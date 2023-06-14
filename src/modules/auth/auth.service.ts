@@ -22,13 +22,14 @@ export class AuthService {
   }
 
   public async signUp(data: { email: string; password: string; firstName?: string; lastName?: string }) {
-    const { firstName, lastName } = data;
+    const { firstName, lastName, email } = data;
 
     const firebaseUser = await this.firebaseAuthSerivce.createUser(data);
 
     return await this.prismaService.user.create({
       data: {
         id: firebaseUser.uid,
+        email: email,
         firstName: firstName ?? "",
         lastName: lastName ?? "",
       },

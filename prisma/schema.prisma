@@ -38,7 +38,7 @@ model Team {
   guestMatches Match[]        @relation("MatchGuest")
   favoriteTeam FavoriteTeam[]
 
-  stadium Stadium? @relation("TeamStadium")
+  stadium Stadium?
 }
 
 model Stadium {
@@ -53,7 +53,7 @@ model Stadium {
   matches     Match[]
 
   teamId          String            @unique @db.ObjectId
-  team            Team              @relation("TeamStadium", fields: [teamId], references: [id])
+  team            Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
   FavoriteStadium FavoriteStadium[]
 }
 
@@ -61,9 +61,9 @@ model Match {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   stadium    Stadium  @relation(fields: [stadiumId], references: [id])
   stadiumId  String   @db.ObjectId
-  host       Team     @relation("MatchHost", fields: [hostId], references: [id])
+  host       Team     @relation("MatchHost", fields: [hostId], references: [id], onDelete: Cascade)
   hostId     String   @db.ObjectId
-  guest      Team     @relation("MatchGuest", fields: [guestId], references: [id])
+  guest      Team     @relation("MatchGuest", fields: [guestId], references: [id], onDelete: Cascade)
   guestId    String   @db.ObjectId
   hostGoals  Int
   guestGoals Int

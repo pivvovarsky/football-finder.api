@@ -14,6 +14,7 @@ import { FirebaseErrorInterceptor } from "src/common/interceptors";
 import { ApiConfigService } from "src/common/services/api-config.service";
 import { PrismaExceptionsFilter } from "src/common/filteres/prisma-exception.filter";
 import { FirebaseExceptionsFilter } from "src/common/filteres/firebase-exception.filter";
+import { AllExceptionsFilter } from "src/common/filteres/all-exception.filter";
 
 @Module({
   imports: [
@@ -43,18 +44,11 @@ import { FirebaseExceptionsFilter } from "src/common/filteres/firebase-exception
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_FILTER,
-      useClass: PrismaExceptionsFilter,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: FirebaseExceptionsFilter,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: FirebaseErrorInterceptor,
-    },
+    { provide: APP_FILTER, useClass: AllExceptionsFilter },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: PrismaExceptionsFilter,
+    // },
   ],
 })
 export class AppModule {}

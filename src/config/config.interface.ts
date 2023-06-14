@@ -37,4 +37,5 @@ export interface IConfig {
       from: string;
     };
   };
+  apiKey: string;
 }
