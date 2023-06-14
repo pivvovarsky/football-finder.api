@@ -8,11 +8,12 @@ import { ConfigModule } from "@nestjs/config";
 import configuration from "src/config/configuration";
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { MailerModule } from "@nestjs-modules/mailer";
-import { ApiConfigService } from "src/common/services";
 import { EjsAdapter } from "@nestjs-modules/mailer/dist/adapters/ejs.adapter";
 import { join } from "path";
 import { FirebaseErrorInterceptor } from "src/common/interceptors";
-import { FirebaseExceptionsFilter, PrismaExceptionsFilter } from "src/common/filteres";
+import { ApiConfigService } from "src/common/services/api-config.service";
+import { PrismaExceptionsFilter } from "src/common/filteres/prisma-exception.filter";
+import { FirebaseExceptionsFilter } from "src/common/filteres/firebase-exception.filter";
 
 @Module({
   imports: [

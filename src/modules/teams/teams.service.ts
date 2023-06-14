@@ -1,12 +1,7 @@
-/*
-https://docs.nestjs.com/providers#services
-*/
-
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { FirebaseStorageService, MongoPrismaService } from "src/common/services";
-import { Prisma, Team } from "src/generated/prisma/client/mongo";
-import { TeamItem } from "./models";
-import { CreateTeamDto } from "./dto";
+import { FirebaseStorageService } from "src/common/services/firebase/firebase-storage.service";
+import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
+import { Prisma } from "src/generated/prisma/client/mongo";
 
 @Injectable()
 export class TeamsService {

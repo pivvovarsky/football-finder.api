@@ -1,4 +1,4 @@
-export enum OperationType {
+export enum Operation {
   SignUp = "signup",
   ForgotPassword = "forgotPassword",
 }

@@ -1,15 +1,10 @@
-/*
-https://docs.nestjs.com/controllers#controllers
-*/
-
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { TeamsService } from "./teams.service";
-import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
 import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
-import { CreateTeamDto, UpdateTeamDto } from "./dto";
 import { Team } from "src/generated/prisma/client/mongo";
-import { PatchTeamImageDto } from "./dto/patch-team-image.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { UpdateTeamDto } from "./dto/update-team.dto";
+import { CreateTeamDto } from "./dto/create-team.dto";
 
 // @FirebaseJWTGuard()
 @ApiTags("teams")

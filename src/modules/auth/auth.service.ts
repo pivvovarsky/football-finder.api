@@ -1,11 +1,8 @@
-/*
-https://docs.nestjs.com/providers#services
-*/
-
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { OperationType } from "src/common/enums";
-import { FirebaseAuthService, MongoPrismaService } from "src/common/services";
+import { Operation } from "src/common/enums/Operation";
+import { FirebaseAuthService } from "src/common/services/firebase/firebase-auth.service";
+import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 
 @Injectable()
 export class AuthService {
@@ -15,11 +12,11 @@ export class AuthService {
     private mailerService: MailerService,
   ) {}
 
-  public async sendMail(option: OperationType, email: string) {
+  public async sendMail(option: Operation, email: string) {
     switch (option) {
-      case OperationType.SignUp:
+      case Operation.SignUp:
         return await this.sendActivationMail(email);
-      case OperationType.ForgotPassword:
+      case Operation.ForgotPassword:
         return await this.sendResetPasswordMail(email);
     }
   }
