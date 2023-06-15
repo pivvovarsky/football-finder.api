@@ -8,6 +8,8 @@ import { ApiConfigService } from "./common/services/api-config.service";
 import { MongoPrismaService } from "./common/services/mongo-prisma.service";
 
 declare const module: any;
+declare const global: any;
+global.apiKeyUsage = 0;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

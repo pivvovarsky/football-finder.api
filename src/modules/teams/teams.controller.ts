@@ -56,8 +56,6 @@ export class TeamsController {
     return await this.teamsService.uploadImage(id, file);
   }
 
-  @ApiKeyGuard()
-  @ApiOperation({ summary: "protected by api-key guard" })
   @Get(":id/imageUrl")
   async getUrlImage(@Param("id") id: string) {
     return await this.teamsService.getUrlImage(id);

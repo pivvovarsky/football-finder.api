@@ -31,7 +31,12 @@ export class FirebaseStorageService {
     if (!storageRef) {
       throw new NotFoundException();
     }
-    return await storageRef.get();
+    const [imageUrl] = await storageRef.getSignedUrl({
+      action: "read",
+      expires: "01-01-2025",
+    });
+
+    return { teamId: id, imageUrl: imageUrl };
   }
 
   public async deleteImage(id: string) {
