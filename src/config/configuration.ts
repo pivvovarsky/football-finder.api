@@ -14,6 +14,7 @@ export default (): IConfig => ({
   firebase: {
     config: JSON.parse(process.env.FIREBASE_CONFIG),
     storageBucket: process.env.FIREBASE_BUCKET ?? "",
+    key: process.env.FIREBASE_KEY ?? "",
   },
   mailer: {
     transport: {
@@ -25,7 +26,8 @@ export default (): IConfig => ({
       },
     },
     defaults: {
-      from: ` Fotball Finder "No-reply" <mailerservice12@gmail.com>`,
+      from: ` Fotball Finder "No-reply" `,
     },
   },
+  apiKey: process.env.API_KEY || "",
 });

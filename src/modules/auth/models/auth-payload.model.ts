@@ -1,5 +1,6 @@
 export class AuthPayload {
   uid: string;
-  firstName: string;
-  lastName: string;
+  email: string;
+  name: string;
+  email_verified: boolean;
 }

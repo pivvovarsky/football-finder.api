@@ -21,4 +21,8 @@ export class ApiConfigService {
   get mailer(): IConfig["mailer"] {
     return this.configService.get("mailer");
   }
+
+  get apiKey(): IConfig["apiKey"] {
+    return this.configService.get("apiKey");
+  }
 }

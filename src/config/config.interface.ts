@@ -23,6 +23,7 @@ export interface IConfig {
       clientC509CertUrl: string;
     };
     storageBucket: string;
+    key: string;
   };
   mailer: {
     transport: {
@@ -37,4 +38,5 @@ export interface IConfig {
       from: string;
     };
   };
+  apiKey: string;
 }

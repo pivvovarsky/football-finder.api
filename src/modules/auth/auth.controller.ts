@@ -1,15 +1,15 @@
-/*
-https://docs.nestjs.com/controllers#controllers
-*/
-
 import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
-import { ChangePasswordDto, ForgotPasswordDto, RegisterDto } from "./dto";
-import { OperationType } from "src/common/enums";
-import { Public, User } from "src/common/decorators";
-import { AuthPayload } from "./models";
 import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
+import { Public } from "src/common/decorators/public.decorator";
+import { Operation } from "src/common/enums/Operation";
+import { User } from "src/common/decorators/user.decorator";
+import { RegisterDto } from "./dto/register.dto";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
+import { AuthPayload } from "./models/auth-payload.model";
+import { ChangePasswordDto } from "./dto/change-password.dto";
+import { LoginDto } from "./dto/login.dto";
 @Public()
 @ApiTags("auth")
 @Controller("auth")
@@ -22,7 +22,7 @@ export class AuthController {
     const user = await this.authService.signUp(body);
 
     if (!!user) {
-      this.authService.sendMail(OperationType.SignUp, body.email);
+      this.authService.sendMail(Operation.SignUp, body.email);
     }
     return user;
   }
@@ -30,7 +30,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post("forgot-password")
   async forgotPassword(@Body() body: ForgotPasswordDto): Promise<void> {
-    await this.authService.sendMail(OperationType.ForgotPassword, body.email);
+    await this.authService.sendMail(Operation.ForgotPassword, body.email);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post("login")
+  async login(@Body() body: LoginDto) {
+    return await this.authService.login(body);
   }
 
   @FirebaseJWTGuard()

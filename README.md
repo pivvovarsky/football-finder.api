@@ -44,4 +44,4 @@ $ npm run test:cov
 
 ## License
 
-Nest is [MIT licensed](https://docs.nestjs.com/support).
+[MIT licensed]

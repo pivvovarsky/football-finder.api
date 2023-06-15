@@ -1,12 +1,15 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./modules/app/app.module";
-import { ApiConfigService, MongoPrismaService } from "./common/services";
 import helmet from "helmet";
 import { setupSwagger } from "./config/setup-swagger";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { ValidationPipe } from "@nestjs/common";
+import { ApiConfigService } from "./common/services/api-config.service";
+import { MongoPrismaService } from "./common/services/mongo-prisma.service";
 
 declare const module: any;
+declare const global: any;
+global.apiKeyUsage = 0;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

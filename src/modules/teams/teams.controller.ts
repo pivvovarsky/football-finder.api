@@ -1,22 +1,20 @@
-/*
-https://docs.nestjs.com/controllers#controllers
-*/
-
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { TeamsService } from "./teams.service";
-import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
-import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
-import { CreateTeamDto, UpdateTeamDto } from "./dto";
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Team } from "src/generated/prisma/client/mongo";
-import { PatchTeamImageDto } from "./dto/patch-team-image.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { UpdateTeamDto } from "./dto/update-team.dto";
+import { CreateTeamDto } from "./dto/create-team.dto";
+import { ApiKeyGuard } from "src/common/decorators/guards/api-key.decorator";
+import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
 
-// @FirebaseJWTGuard()
+@FirebaseJWTGuard()
 @ApiTags("teams")
 @Controller("teams")
 export class TeamsController {
   constructor(private teamsService: TeamsService) {}
 
+  @ApiOperation({ summary: "protected by firbease-JWT" })
   @Get()
   async getMany(): Promise<Team[]> {
     return await this.teamsService.getMany();
@@ -58,5 +56,10 @@ export class TeamsController {
   @UseInterceptors(FileInterceptor("file"))
   async uploadImage(@Param("id") id: string, @UploadedFile() file: Express.Multer.File) {
     return await this.teamsService.uploadImage(id, file);
+  }
+
+  @Get(":id/imageUrl")
+  async getUrlImage(@Param("id") id: string) {
+    return await this.teamsService.getUrlImage(id);
   }
 }

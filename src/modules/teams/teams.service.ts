@@ -1,19 +1,16 @@
-/*
-https://docs.nestjs.com/providers#services
-*/
-
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { FirebaseStorageService, MongoPrismaService } from "src/common/services";
-import { Prisma, Team } from "src/generated/prisma/client/mongo";
-import { TeamItem } from "./models";
-import { CreateTeamDto } from "./dto";
+import { FirebaseStorageService } from "src/common/services/firebase/firebase-storage.service";
+import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
+import { Prisma } from "src/generated/prisma/client/mongo";
 
 @Injectable()
 export class TeamsService {
   constructor(private mongoPrismaService: MongoPrismaService, private firebaseStorageService: FirebaseStorageService) {}
 
   public async create(data: Prisma.TeamCreateInput) {
-    return await this.mongoPrismaService.team.create({ data });
+    return await this.mongoPrismaService.team.create({
+      data: { ...data, stadium: { create: { name: data.name, latitude: 0, longitude: 0 } } },
+    });
   }
 
   public async getMany() {
@@ -32,12 +29,17 @@ export class TeamsService {
   }
 
   public async deleteOne(id: string) {
-    return await this.mongoPrismaService.team.delete({ where: { id: id } });
+    await await this.mongoPrismaService.team.delete({ where: { id: id } });
   }
 
   public async uploadImage(id: string, file: Express.Multer.File) {
     const firebaseImageUrl = await this.firebaseStorageService.uploadImage(id, file);
     await this.mongoPrismaService.team.update({ where: { id: id }, data: { imageUrl: firebaseImageUrl } });
+    return firebaseImageUrl;
+  }
+
+  public async getUrlImage(id: string) {
+    const firebaseImageUrl = await this.firebaseStorageService.getImageUrl(id);
     return firebaseImageUrl;
   }
 }
