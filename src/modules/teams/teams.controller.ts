@@ -14,6 +14,7 @@ import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorato
 export class TeamsController {
   constructor(private teamsService: TeamsService) {}
 
+  @ApiOperation({ summary: "protected by firbease-JWT" })
   @Get()
   async getMany(): Promise<Team[]> {
     return await this.teamsService.getMany();
