@@ -1,8 +1,10 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Operation } from "src/common/enums/Operation";
+import { ApiConfigService } from "src/common/services/api-config.service";
 import { FirebaseAuthService } from "src/common/services/firebase/firebase-auth.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
+import axios from "axios";
 
 @Injectable()
 export class AuthService {
@@ -10,6 +12,7 @@ export class AuthService {
     private prismaService: MongoPrismaService,
     private firebaseAuthSerivce: FirebaseAuthService,
     private mailerService: MailerService,
+    private apiConfigService: ApiConfigService,
   ) {}
 
   public async sendMail(option: Operation, email: string) {
@@ -86,5 +89,25 @@ export class AuthService {
 
   public async changePassword(data: { id: string; newPassword: string }): Promise<void> {
     await this.firebaseAuthSerivce.changePassword(data);
+  }
+
+  public async login(body: { email: string; password: string }) {
+    const key = await this.apiConfigService.firebase.key;
+    const url = " https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
+    const response = await axios.post(
+      url,
+      { ...body, returnSecureToken: true },
+      {
+        params: {
+          key: key,
+        },
+      },
+    );
+
+    return {
+      email: response.data.email,
+      name: response.data.displayName,
+      token: response.data.idToken,
+    };
   }
 }

@@ -9,6 +9,7 @@ import { RegisterDto } from "./dto/register.dto";
 import { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import { AuthPayload } from "./models/auth-payload.model";
 import { ChangePasswordDto } from "./dto/change-password.dto";
+import { LoginDto } from "./dto/login.dto";
 @Public()
 @ApiTags("auth")
 @Controller("auth")
@@ -30,6 +31,12 @@ export class AuthController {
   @Post("forgot-password")
   async forgotPassword(@Body() body: ForgotPasswordDto): Promise<void> {
     await this.authService.sendMail(Operation.ForgotPassword, body.email);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post("login")
+  async login(@Body() body: LoginDto) {
+    return await this.authService.login(body);
   }
 
   @FirebaseJWTGuard()
