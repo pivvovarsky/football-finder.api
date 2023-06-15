@@ -110,3 +110,4 @@ dist
 
 # prisma 
 /src/generated
+package-lock.json
