@@ -29,7 +29,7 @@ export class FirebaseAuthService {
     password: string;
     firstName?: string;
     lastName?: string;
-  }): Promise<UserRecord> {
+  }): Promise<string> {
     const { email, password, firstName, lastName } = body;
 
     const user = await this.auth.createUser({
@@ -39,7 +39,7 @@ export class FirebaseAuthService {
       displayName: `${firstName ?? ""} ${lastName ?? ""}`,
     });
 
-    return user;
+    return user.uid;
   }
 
   public async getActivationLink(email: string): Promise<string> {

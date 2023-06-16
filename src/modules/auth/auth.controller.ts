@@ -10,6 +10,7 @@ import { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import { AuthPayload } from "./models/auth-payload.model";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { LoginDto } from "./dto/login.dto";
+
 @Public()
 @ApiTags("auth")
 @Controller("auth")

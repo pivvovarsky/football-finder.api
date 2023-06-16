@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 
 describe("AppController", () => {
   let appController: AppController;
@@ -8,7 +9,7 @@ describe("AppController", () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [AppService, MongoPrismaService],
     }).compile();
 
     appController = app.get<AppController>(AppController);
