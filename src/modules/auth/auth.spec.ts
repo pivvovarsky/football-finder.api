@@ -22,7 +22,7 @@ jest.mock("src/modules/auth/singleton.ts");
 describe("AuthController", () => {
   let authController: AuthController;
   let authService: AuthService;
-  const NOW = new Date();
+
   class TestTransportFactory implements MailerTransportFactory {
     createTransport(options?: TransportType) {
       return nodemailerMock.createTransport({ host: "localhost", port: -100 });
