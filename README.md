@@ -42,6 +42,10 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Swagger api available by default after run
+
+http://localhost:8080/api
+
 ## License
 
 [MIT licensed]
