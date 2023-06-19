@@ -35,6 +35,7 @@ export class AuthService {
         email: email,
         firstName: firstName ?? "",
         lastName: lastName ?? "",
+        settings: { create: {} },
       },
     });
   }
