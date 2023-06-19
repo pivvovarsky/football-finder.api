@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { ApiConfigService } from "src/common/services/api-config.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 
 @Injectable()
@@ -9,8 +8,8 @@ export class AppService {
     return "Hello World!";
   }
 
-  async getApiKeyUsage(): Promise<Object> {
+  async getApiKeyUsage(): Promise<{ API_KEY_USAGE_COUNT: number | null }> {
     const apiKeyUsageCount = await this.mongoPrismaSerivce.appStatistics.findFirst();
-    return await { API_KEY_USAGE_COUNT: apiKeyUsageCount?.apiKeyUsage };
+    return await { API_KEY_USAGE_COUNT: apiKeyUsageCount?.apiKeyUsage ?? null };
   }
 }

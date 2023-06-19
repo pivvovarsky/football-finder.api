@@ -2,6 +2,7 @@ import { IConfig } from "./config.interface";
 
 export default (): IConfig => ({
   api: {
+    //@ts-ignore
     port: parseInt(process.env.APP_PORT) || 8080,
     prefix: "api",
     version: "1",
@@ -12,6 +13,7 @@ export default (): IConfig => ({
     version: "1.0",
   },
   firebase: {
+    //@ts-ignore
     config: JSON.parse(process.env.FIREBASE_CONFIG),
     storageBucket: process.env.FIREBASE_BUCKET ?? "",
     key: process.env.FIREBASE_KEY ?? "",
