@@ -108,7 +108,6 @@ export class AuthService {
       },
     );
     const firebaseUser = await this.firebaseAuthSerivce.getUser(response.data.localId);
-    if (!firebaseUser) return;
     if (!firebaseUser.emailVerified) {
       throw new UnauthorizedException("Your email is not verified");
     } else {
