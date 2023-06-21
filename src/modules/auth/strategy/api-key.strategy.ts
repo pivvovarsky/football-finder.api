@@ -11,9 +11,10 @@ export class ApiKeyStrategy extends PassportStrategy(Strategy, "api-key") {
   }
 
   public async validate(apiKey: string): Promise<boolean> {
+    const DEFAULT_APP_STATS_ID = "648a5181d3ce8be4d513b36d";
     if (this.config.apiKey === apiKey) {
       await this.mongoPrismaService.appStatistics.update({
-        where: { id: "648a5181d3ce8be4d513b36d" },
+        where: { id: DEFAULT_APP_STATS_ID },
         data: { apiKeyUsage: { increment: 1 } },
       });
       return true;

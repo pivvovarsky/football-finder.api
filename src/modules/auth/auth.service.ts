@@ -1,13 +1,10 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Operation } from "src/common/enums/Operation";
 import { ApiConfigService } from "src/common/services/api-config.service";
 import { FirebaseAuthService } from "src/common/services/firebase/firebase-auth.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import axios from "axios";
-import { BadRequestError } from "passport-headerapikey";
-import { error } from "console";
-import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
 
 @Injectable()
 export class AuthService {
