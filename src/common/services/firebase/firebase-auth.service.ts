@@ -1,12 +1,7 @@
-/*
-https://docs.nestjs.com/providers#services
-*/
-
 import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import firebase from "firebase-admin";
 import { FirebaseService } from "./firebase.service";
 import { DecodedIdToken } from "firebase-admin/lib/auth/token-verifier";
-import { UserRecord } from "firebase-admin/lib/auth/user-record";
 
 @Injectable()
 export class FirebaseAuthService {

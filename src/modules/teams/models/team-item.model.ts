@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional } from "class-validator";
 import { Stadium, Team as TeamModel } from "src/generated/prisma/client/mongo";
 
 export class TeamItem implements TeamModel {
