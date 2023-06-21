@@ -5,7 +5,6 @@ import { Team } from "src/generated/prisma/client/mongo";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateTeamDto } from "./dto/update-team.dto";
 import { CreateTeamDto } from "./dto/create-team.dto";
-import { ApiKeyGuard } from "src/common/decorators/guards/api-key.decorator";
 import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
 
 @FirebaseJWTGuard()

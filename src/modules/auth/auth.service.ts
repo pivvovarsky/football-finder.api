@@ -104,10 +104,12 @@ export class AuthService {
         },
       },
     );
+    const firebaseUser = await this.firebaseAuthSerivce.getUser(response.data.localId);
 
     return {
       email: response.data.email,
       name: response.data.displayName,
+      emailVerified: firebaseUser.emailVerified,
       token: response.data.idToken,
     };
   }

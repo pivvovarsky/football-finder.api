@@ -50,6 +50,10 @@ export class FirebaseAuthService {
     return await this.auth.getUserByEmail(email);
   }
 
+  public async getUser(uid: string) {
+    return await this.auth.getUser(uid);
+  }
+
   public async generateResetPasswordLink(email: string): Promise<string> {
     return await this.auth.generatePasswordResetLink(email);
   }

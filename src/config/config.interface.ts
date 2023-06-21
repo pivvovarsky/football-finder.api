@@ -27,8 +27,7 @@ export interface IConfig {
   };
   mailer: {
     transport: {
-      host: string;
-      port: number;
+      service: string;
       auth: {
         user: string;
         pass: string;

@@ -111,3 +111,7 @@ dist
 # prisma 
 /src/generated
 package-lock.json
+
+# https certificates
+RootCA.key
+RootCA.pem
