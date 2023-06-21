@@ -9,6 +9,7 @@ import { MailerService, MailerTransportFactory } from "@nestjs-modules/mailer";
 import { TransportType } from "@nestjs-modules/mailer/dist/interfaces/mailer-options.interface";
 import * as nodemailerMock from "nodemailer-mock";
 import { FirebaseAuthService } from "src/common/services/firebase/firebase-auth.service";
+import { AuthPayload } from "./models/auth-payload.model";
 jest.mock("@nestjs/config");
 jest.mock("src/common/services/mongo-prisma.service.ts");
 jest.mock("src/common/services/api-config.service.ts");
@@ -55,7 +56,12 @@ describe("AuthController", () => {
   describe("login", () => {
     it("should perform login", async () => {
       const loginDto = { email: "test@example.com", password: "password" };
-      const authPayload = { email: "test@example.com", name: "test", emailVerified: true, token: "test" };
+      const authPayload: { email: string; name: string; emailVerified: true; token: string } = {
+        email: "test@example.com",
+        name: "test",
+        emailVerified: true,
+        token: "test",
+      };
 
       jest.spyOn(authService, "login").mockResolvedValue(authPayload);
 
