@@ -17,7 +17,6 @@ jest.mock("src/common/services/firebase/firebase.service.ts");
 jest.mock("src/common/services/firebase/firebase-auth.service.ts");
 jest.mock("@nestjs-modules/mailer");
 jest.mock("firebase-admin");
-jest.mock("src/modules/auth/singleton.ts");
 
 describe("AuthController", () => {
   let authController: AuthController;
@@ -56,7 +55,7 @@ describe("AuthController", () => {
   describe("login", () => {
     it("should perform login", async () => {
       const loginDto = { email: "test@example.com", password: "password" };
-      const authPayload = { email: "test@example.com", name: "test", token: "test" };
+      const authPayload = { email: "test@example.com", name: "test", emailVerified: true, token: "test" };
 
       jest.spyOn(authService, "login").mockResolvedValue(authPayload);
 

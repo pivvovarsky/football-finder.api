@@ -104,11 +104,11 @@ describe("TeamsController", () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      const id = "123";
+      const paramId = "123";
 
       jest.spyOn(teamsService, "updateOne").mockResolvedValue(updatedTeam);
 
-      const result = await teamsController.update(id, updateTeamDto);
+      const result = await teamsController.update(paramId, updateTeamDto);
 
       expect(result).toBe(updatedTeam);
     });
