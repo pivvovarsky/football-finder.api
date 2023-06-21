@@ -3,9 +3,6 @@ import { Stadium } from "src/generated/prisma/client/mongo";
 
 export class StadiumItem implements Stadium {
   @ApiProperty()
-  teamId: string;
-
-  @ApiProperty()
   id: string;
 
   @ApiProperty()
@@ -18,11 +15,14 @@ export class StadiumItem implements Stadium {
   longitude: number;
 
   @ApiProperty()
-  description: string;
+  description: string | null;
 
   @ApiProperty()
   createdAt: Date;
 
   @ApiProperty()
   updatedAt: Date;
+
+  @ApiProperty()
+  teamId: string;
 }

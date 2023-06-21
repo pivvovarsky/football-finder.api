@@ -1,3 +1,4 @@
+import { StadiumsModule } from "../stadiums/stadiums.module";
 import { TeamsModule } from "./../teams/teams.module";
 import { AuthModule } from "./../auth/auth.module";
 import { GlobalModule } from "../../common/module";
@@ -15,8 +16,6 @@ import { AllExceptionsFilter } from "src/common/filteres/all-exception.filter";
 
 @Module({
   imports: [
-    TeamsModule,
-    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
@@ -37,6 +36,9 @@ import { AllExceptionsFilter } from "src/common/filteres/all-exception.filter";
       inject: [ApiConfigService],
     }),
     GlobalModule,
+    StadiumsModule,
+    TeamsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_FILTER, useClass: AllExceptionsFilter }],

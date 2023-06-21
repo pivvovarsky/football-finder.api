@@ -6,13 +6,18 @@ import { NestExpressApplication } from "@nestjs/platform-express";
 import { ValidationPipe } from "@nestjs/common";
 import { ApiConfigService } from "./common/services/api-config.service";
 import { MongoPrismaService } from "./common/services/mongo-prisma.service";
+import * as fs from "node:fs";
 
 declare const module: any;
 declare const global: any;
 global.apiKeyUsage = 0;
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const httpsOptions = {
+    key: fs.readFileSync("RootCA.key"),
+    cert: fs.readFileSync("RootCA.pem"),
+  };
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { httpsOptions });
   const configService: ApiConfigService = app.get(ApiConfigService);
   app.use(helmet());
   app.enableCors();
