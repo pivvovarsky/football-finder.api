@@ -18,7 +18,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const httpStatus =
       exception instanceof HttpException
         ? exception.getStatus()
-        : parseInt(exception.code) || HttpStatus.INTERNAL_SERVER_ERROR;
+        : //@ts-ignore
+          exception.request.res.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
 
     const responseBody = {
       statusCode: httpStatus,

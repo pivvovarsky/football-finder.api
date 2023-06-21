@@ -1,10 +1,13 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Operation } from "src/common/enums/Operation";
 import { ApiConfigService } from "src/common/services/api-config.service";
 import { FirebaseAuthService } from "src/common/services/firebase/firebase-auth.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import axios from "axios";
+import { BadRequestError } from "passport-headerapikey";
+import { error } from "console";
+import { ExceptionsHandler } from "@nestjs/core/exceptions/exceptions-handler";
 
 @Injectable()
 export class AuthService {
@@ -105,12 +108,16 @@ export class AuthService {
       },
     );
     const firebaseUser = await this.firebaseAuthSerivce.getUser(response.data.localId);
-
-    return {
-      email: response.data.email,
-      name: response.data.displayName,
-      emailVerified: firebaseUser.emailVerified,
-      token: response.data.idToken,
-    };
+    if (!firebaseUser) return;
+    if (!firebaseUser.emailVerified) {
+      throw new UnauthorizedException("Your email is not verified");
+    } else {
+      return {
+        email: response.data.email,
+        name: response.data.displayName,
+        emailVerified: firebaseUser.emailVerified,
+        token: response.data.idToken,
+      };
+    }
   }
 }
