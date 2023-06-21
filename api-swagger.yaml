@@ -23,11 +23,66 @@ paths:
       responses:
         "200":
           description: ""
+      tags: *ref_0
+  /api/stadiums:
+    get:
+      operationId: StadiumsController_getMany
+      summary: protected by firbease-JWT
+      parameters: []
+      responses:
+        "200":
+          description: ""
           content:
             application/json:
               schema:
-                type: object
-      tags: *ref_0
+                type: array
+                items:
+                  $ref: "#/components/schemas/StadiumItem"
+      tags: &ref_1
+        - stadiums
+      security: &ref_2
+        - bearer: []
+  /api/stadiums/{id}:
+    get:
+      operationId: StadiumsController_getOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StadiumItem"
+      tags: *ref_1
+      security: *ref_2
+    put:
+      operationId: StadiumsController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateStadiumDto"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StadiumItem"
+      tags: *ref_1
+      security: *ref_2
   /api/teams:
     get:
       operationId: TeamsController_getMany
@@ -42,9 +97,9 @@ paths:
                 type: array
                 items:
                   type: object
-      tags: &ref_1
+      tags: &ref_3
         - teams
-      security: &ref_2
+      security: &ref_4
         - bearer: []
     post:
       operationId: TeamsController_create
@@ -62,8 +117,8 @@ paths:
             application/json:
               schema:
                 type: object
-      tags: *ref_1
-      security: *ref_2
+      tags: *ref_3
+      security: *ref_4
   /api/teams/{id}:
     get:
       operationId: TeamsController_getOne
@@ -80,8 +135,8 @@ paths:
             application/json:
               schema:
                 type: object
-      tags: *ref_1
-      security: *ref_2
+      tags: *ref_3
+      security: *ref_4
     put:
       operationId: TeamsController_update
       parameters:
@@ -103,8 +158,8 @@ paths:
             application/json:
               schema:
                 type: object
-      tags: *ref_1
-      security: *ref_2
+      tags: *ref_3
+      security: *ref_4
     delete:
       operationId: TeamsController_delete
       parameters:
@@ -116,8 +171,8 @@ paths:
       responses:
         "200":
           description: ""
-      tags: *ref_1
-      security: *ref_2
+      tags: *ref_3
+      security: *ref_4
   /api/teams/{id}/image:
     post:
       operationId: TeamsController_uploadImage
@@ -144,8 +199,8 @@ paths:
             application/json:
               schema:
                 type: string
-      tags: *ref_1
-      security: *ref_2
+      tags: *ref_3
+      security: *ref_4
   /api/teams/{id}/imageUrl:
     get:
       operationId: TeamsController_getUrlImage
@@ -158,8 +213,8 @@ paths:
       responses:
         "200":
           description: ""
-      tags: *ref_1
-      security: *ref_2
+      tags: *ref_3
+      security: *ref_4
   /api/auth/register:
     post:
       operationId: AuthController_signUp
@@ -177,7 +232,7 @@ paths:
             application/json:
               schema:
                 type: object
-      tags: &ref_3
+      tags: &ref_5
         - auth
   /api/auth/forgot-password:
     post:
@@ -192,7 +247,7 @@ paths:
       responses:
         "200":
           description: ""
-      tags: *ref_3
+      tags: *ref_5
   /api/auth/login:
     post:
       operationId: AuthController_login
@@ -206,7 +261,7 @@ paths:
       responses:
         "200":
           description: ""
-      tags: *ref_3
+      tags: *ref_5
   /api/auth/change-password:
     post:
       operationId: AuthController_changePassword
@@ -220,7 +275,7 @@ paths:
       responses:
         "201":
           description: ""
-      tags: *ref_3
+      tags: *ref_5
       security:
         - bearer: []
 info:
@@ -241,6 +296,53 @@ components:
       in: header
       name: X-API-KEY
   schemas:
+    StadiumItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        description:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        teamId:
+          type: string
+      required:
+        - id
+        - name
+        - latitude
+        - longitude
+        - description
+        - createdAt
+        - updatedAt
+        - teamId
+    UpdateStadiumDto:
+      type: object
+      properties:
+        name:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        description:
+          type: string
+          nullable: true
+      required:
+        - name
+        - latitude
+        - longitude
+        - description
     CreateTeamDto:
       type: object
       properties:
