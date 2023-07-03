@@ -6,6 +6,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateTeamDto } from "./dto/update-team.dto";
 import { CreateTeamDto } from "./dto/create-team.dto";
 import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
+import { TeamItem } from "./models/team-item.model";
 
 @FirebaseJWTGuard()
 @ApiTags("teams")
@@ -15,12 +16,12 @@ export class TeamsController {
 
   @ApiOperation({ summary: "protected by firbease-JWT" })
   @Get()
-  async getMany(): Promise<Team[]> {
+  async getMany(): Promise<TeamItem[]> {
     return await this.teamsService.getMany();
   }
 
   @Get(":id")
-  async getOne(@Param("id") id: string): Promise<Team> {
+  async getOne(@Param("id") id: string): Promise<TeamItem> {
     return await this.teamsService.getOne(id);
   }
 

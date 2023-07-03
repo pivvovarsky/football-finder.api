@@ -7,6 +7,7 @@ import { FirebaseService } from "src/common/services/firebase/firebase.service";
 import { ApiConfigService } from "src/common/services/api-config.service";
 import { ConfigService } from "@nestjs/config";
 import { IConfig } from "src/config/config.interface";
+import { TeamItem } from "./models/team-item.model";
 jest.mock("@nestjs/config");
 jest.mock("src/common/services/mongo-prisma.service.ts");
 jest.mock("src/common/services/api-config.service.ts");
@@ -32,9 +33,25 @@ describe("TeamsController", () => {
 
   describe("getMany", () => {
     it("should return an array of teams", async () => {
-      const mockTeams: Team[] = [
-        { id: "123", imageUrl: "", createdAt: NOW, updatedAt: NOW, name: "Team 1", description: "Description 1" },
-        { id: "321", imageUrl: "", createdAt: NOW, updatedAt: NOW, name: "Team 2", description: "Description 2" },
+      const mockTeams: TeamItem[] = [
+        {
+          id: "123",
+          imageUrl: "",
+          createdAt: NOW,
+          updatedAt: NOW,
+          name: "Team 1",
+          description: "Description 1",
+          stadium: null,
+        },
+        {
+          id: "321",
+          imageUrl: "",
+          createdAt: NOW,
+          updatedAt: NOW,
+          name: "Team 2",
+          description: "Description 2",
+          stadium: null,
+        },
       ];
 
       jest.spyOn(teamsService, "getMany").mockResolvedValue(mockTeams);
@@ -47,13 +64,14 @@ describe("TeamsController", () => {
 
   describe("getOne", () => {
     it("should return a team with the specified id", async () => {
-      const mockTeam: Team = {
+      const mockTeam: TeamItem = {
         id: "123",
         imageUrl: "",
         createdAt: NOW,
         updatedAt: NOW,
         name: "Team 1",
         description: "Description 1",
+        stadium: null,
       };
       const id = "123";
 
