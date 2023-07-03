@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Stadium, Team as TeamModel } from "src/generated/prisma/client/mongo";
+import { StadiumItem } from "src/modules/stadiums/models/stadium-item.model";
 
 export class TeamItem implements TeamModel {
   @ApiProperty()
@@ -12,9 +13,6 @@ export class TeamItem implements TeamModel {
   name: string;
 
   @ApiProperty()
-  stadiumId: string;
-
-  @ApiProperty()
   imageUrl: string | null;
 
   @ApiProperty()
@@ -24,5 +22,5 @@ export class TeamItem implements TeamModel {
   updatedAt: Date;
 
   @ApiProperty()
-  stadium: Stadium;
+  stadium: StadiumItem | null;
 }

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { FirebaseStorageService } from "src/common/services/firebase/firebase-storage.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { Prisma } from "src/generated/prisma/client/mongo";
+import { TeamItem } from "./models/team-item.model";
 
 @Injectable()
 export class TeamsService {
@@ -13,12 +14,12 @@ export class TeamsService {
     });
   }
 
-  public async getMany() {
-    return await this.mongoPrismaService.team.findMany();
+  public async getMany(): Promise<TeamItem[]> {
+    return await this.mongoPrismaService.team.findMany({ include: { stadium: true } });
   }
 
   public async getOne(id: string) {
-    const team = await this.mongoPrismaService.team.findFirst({ where: { id: id } });
+    const team = await this.mongoPrismaService.team.findFirst({ where: { id: id }, include: { stadium: true } });
     if (!team) {
       throw new NotFoundException();
     } else return team;
