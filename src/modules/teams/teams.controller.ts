@@ -59,8 +59,8 @@ export class TeamsController {
     },
   })
   @UseInterceptors(FileInterceptor("file"))
-  async uploadImage(@Param("id") id: string, @UploadedFile() file: Express.Multer.File) {
-    return await this.teamsService.uploadImage(id, file);
+  async uploadImage(@Param("id") id: string, @UploadedFile() file: Express.Multer.File): Promise<void> {
+    await this.teamsService.uploadImage(id, file);
   }
 
   @ApiOperation({ summary: "get uploaded image" })

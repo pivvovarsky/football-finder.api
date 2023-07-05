@@ -12,7 +12,9 @@ import { MailerModule } from "@nestjs-modules/mailer";
 import { EjsAdapter } from "@nestjs-modules/mailer/dist/adapters/ejs.adapter";
 import { join } from "path";
 import { ApiConfigService } from "src/common/services/api-config.service";
-import { AllExceptionsFilter } from "src/common/filteres/all-exception.filter";
+import { PrismaExceptionsFilter } from "src/common/filteres/prisma-exception.filter";
+import { FirebaseExceptionsFilter } from "src/common/filteres/firebase-exception.filter";
+import { FirebaseErrorInterceptor } from "src/common/interceptors/firebase-error.interceptor";
 
 @Module({
   imports: [
@@ -41,6 +43,20 @@ import { AllExceptionsFilter } from "src/common/filteres/all-exception.filter";
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_FILTER, useClass: AllExceptionsFilter }],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: PrismaExceptionsFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: FirebaseExceptionsFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: FirebaseErrorInterceptor,
+    },
+  ],
 })
 export class AppModule {}
