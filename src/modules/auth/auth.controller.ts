@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
 import { Public } from "src/common/decorators/public.decorator";
@@ -19,6 +19,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post("register")
+  @ApiOperation({ summary: "Create an account" })
   async signUp(@Body() body: RegisterDto) {
     const user = await this.authService.signUp(body);
 
@@ -30,12 +31,14 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post("forgot-password")
+  @ApiOperation({ summary: "Reset password" })
   async forgotPassword(@Body() body: ForgotPasswordDto): Promise<void> {
     await this.authService.sendMail(Operation.ForgotPassword, body.email);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post("login")
+  @ApiOperation({ summary: "Logging via api" })
   async login(@Body() body: LoginDto) {
     return await this.authService.login(body);
   }

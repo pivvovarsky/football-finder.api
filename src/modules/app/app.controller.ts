@@ -9,13 +9,14 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @ApiKeyGuard()
-  @ApiOperation({ summary: "protected by api-key guard" })
+  @ApiOperation({ summary: "protected by api-key guard - Api health check" })
   @Get("api-check")
   getHello(): string {
     return this.appService.getHello();
   }
 
   @Get("/statistics/api-key")
+  @ApiOperation({ summary: "protected by api-key guard - Api-key statistics" })
   async getApiKeyStatistics() {
     return this.appService.getApiKeyUsage();
   }
