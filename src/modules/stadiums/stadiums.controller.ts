@@ -11,17 +11,19 @@ import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorato
 export class StadiumsController {
   constructor(private stadiumsService: StadiumsService) {}
 
-  @ApiOperation({ summary: "protected by firbease-JWT" })
+  @ApiOperation({ summary: "protected by firbease-JWT - get all the stadiums" })
   @Get()
   async getMany(): Promise<StadiumItem[]> {
     return await this.stadiumsService.getMany();
   }
 
+  @ApiOperation({ summary: "protected by firbease-JWT - get one stadium" })
   @Get(":id")
   async getOne(@Param("id") id: string): Promise<StadiumItem> {
     return await this.stadiumsService.getOne(id);
   }
 
+  @ApiOperation({ summary: "protected by firbease-JWT - update the stadium" })
   @Put(":id")
   async update(@Param("id") id: string, @Body() body: UpdateStadiumDto): Promise<StadiumItem> {
     return await this.stadiumsService.updateOne(id, body);

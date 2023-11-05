@@ -1,4 +1,4 @@
-import { NotFoundException } from "@nestjs/common";
+import { Logger, NotFoundException } from "@nestjs/common";
 import * as dayjs from "dayjs";
 import { Command, CommandRunner } from "nest-commander";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
@@ -18,7 +18,7 @@ const DATA_QUANTITY = 2;
 const TODAY = dayjs().toDate();
 @Command({ name: "generate-fake-data", description: "Generate fake data to mongo database" })
 export class GenerateFakeData extends CommandRunner {
-  constructor(private prismaService: MongoPrismaService) {
+  constructor(private prismaService: MongoPrismaService, private logger: Logger) {
     super();
   }
 
@@ -73,37 +73,45 @@ export class GenerateFakeData extends CommandRunner {
       this.prismaService.team.findMany({}),
     ]);
 
-    users.forEach(async (user, index) => {
+    for (let index = 0; index < users.length; index++) {
       Promise.all([
         this.prismaService.favoriteMatch.create({
           data: {
             matchId: matches[index].id,
-            userId: user.id,
+            userId: users[index].id,
           },
         }),
         this.prismaService.favoriteStadium.create({
           data: {
             stadiumId: stadiums[index].id,
-            userId: user.id,
+            userId: users[index].id,
           },
         }),
         this.prismaService.favoriteTeam.create({
           data: {
             teamId: teams[index].id,
-            userId: user.id,
+            userId: users[index].id,
           },
         }),
       ]);
-    });
+    }
   }
 
   async run() {
     console.log("starting generateTeamsWithStadiums!");
-    await this.generateTeamsWithStadiums().catch((err) => console.error(err));
+    await this.generateTeamsWithStadiums()
+      .then(() => console.log("completed generateTeamsWithStadiums!\n"))
+      .catch((err) => console.error(err));
+
     console.log("starting generateMatches!");
-    await this.generateMatches().catch((err) => console.error(err));
+    await this.generateMatches()
+      .then(() => console.log("completed generateMatches!\n"))
+      .catch((err) => console.error(err));
+
     console.log("starting likeStadiumsMacthesTeamsByUsers!");
-    await this.likeStadiumsMacthesTeamsByUsers().catch((err) => console.error(err));
+    await this.likeStadiumsMacthesTeamsByUsers()
+      .then(() => console.log("completed likeStadiumsMacthesTeamsByUsers!\n"))
+      .catch((err) => console.error(err));
 
     console.log("Data generation completed!");
   }
