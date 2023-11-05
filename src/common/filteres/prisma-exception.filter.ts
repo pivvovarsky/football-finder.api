@@ -29,7 +29,6 @@ export class PrismaExceptionsFilter extends BaseExceptionFilter {
         response.status(HttpStatus.NOT_FOUND).json({
           statusCode: HttpStatus.NOT_FOUND,
           timestamp: new Date().toISOString(),
-          // errors: exception.message.replace(/\n/, ""),
           errors: "Resource not Found!",
         });
         break;

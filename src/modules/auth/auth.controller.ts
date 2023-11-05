@@ -44,7 +44,7 @@ export class AuthController {
   }
 
   @FirebaseJWTGuard()
-  @Post("change-password")
+  @Post("me/change-password")
   async changePassword(@User() user: AuthPayload, @Body() body: ChangePasswordDto): Promise<void> {
     const data = { id: user.uid, newPassword: body.password };
     await this.authService.changePassword(data);
