@@ -1,5 +1,5 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Operation } from "src/common/enums/Operation";
 import { ApiConfigService } from "src/common/services/api-config.service";
 import { FirebaseAuthService } from "src/common/services/firebase/firebase-auth.service";
@@ -26,7 +26,8 @@ export class AuthService {
 
   public async signUp(data: { email: string; password: string; firstName?: string; lastName?: string }) {
     const { firstName, lastName, email } = data;
-
+    const userExists = await this.prismaService.user.findFirst({ where: { email: email } });
+    if (userExists) throw new ConflictException("User in use");
     const firebaseUserId = await this.firebaseAuthSerivce.createUser(data);
 
     return await this.prismaService.user.create({
@@ -80,10 +81,10 @@ export class AuthService {
           },
         })
         .then(() => {
-          console.debug("mail sent");
+          console.debug("mail sent", firebaseUser.email);
         })
         .catch((error) => {
-          console.error("error", error);
+          console.error("error", error, firebaseUser.email);
         });
     } else throw new NotFoundException();
   }
