@@ -43,6 +43,8 @@ model Team {
 
 model Stadium {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  imageUrl    String?
+  websiteUrl  String?
   name        String
   latitude    Float
   longitude   Float

@@ -1,5 +1,5 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Operation } from "src/common/enums/Operation";
 import { ApiConfigService } from "src/common/services/api-config.service";
 import { FirebaseAuthService } from "src/common/services/firebase/firebase-auth.service";
@@ -13,6 +13,7 @@ export class AuthService {
     private firebaseAuthSerivce: FirebaseAuthService,
     private mailerService: MailerService,
     private apiConfigService: ApiConfigService,
+    private readonly logger: Logger,
   ) {}
 
   public async sendMail(option: Operation, email: string) {
@@ -57,10 +58,10 @@ export class AuthService {
           },
         })
         .then(() => {
-          console.debug("mail sent");
+          this.logger.debug("mail sent");
         })
         .catch((error) => {
-          console.error("error", error);
+          this.logger.error("error", error);
         });
     } else throw new NotFoundException();
   }
@@ -81,10 +82,10 @@ export class AuthService {
           },
         })
         .then(() => {
-          console.debug("mail sent", firebaseUser.email);
+          this.logger.log("mail sent", firebaseUser.email);
         })
         .catch((error) => {
-          console.error("error", error, firebaseUser.email);
+          this.logger.error("error", error, firebaseUser.email);
         });
     } else throw new NotFoundException();
   }

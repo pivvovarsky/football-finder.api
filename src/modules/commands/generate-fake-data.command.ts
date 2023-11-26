@@ -98,21 +98,21 @@ export class GenerateFakeData extends CommandRunner {
   }
 
   async run() {
-    console.log("starting generateTeamsWithStadiums!");
+    this.logger.log("starting generateTeamsWithStadiums!");
     await this.generateTeamsWithStadiums()
       .then(() => console.log("completed generateTeamsWithStadiums!\n"))
       .catch((err) => console.error(err));
 
-    console.log("starting generateMatches!");
+    this.logger.log("starting generateMatches!");
     await this.generateMatches()
       .then(() => console.log("completed generateMatches!\n"))
       .catch((err) => console.error(err));
 
-    console.log("starting likeStadiumsMacthesTeamsByUsers!");
+    this.logger.log("starting likeStadiumsMacthesTeamsByUsers!");
     await this.likeStadiumsMacthesTeamsByUsers()
       .then(() => console.log("completed likeStadiumsMacthesTeamsByUsers!\n"))
       .catch((err) => console.error(err));
 
-    console.log("Data generation completed!");
+    this.logger.log("Data generation completed!");
   }
 }

@@ -1,15 +1,23 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateStadiumDto {
   @IsString()
-  name: string;
+  @IsOptional()
+  name?: string;
 
   @IsNumber()
-  latitude: number;
+  @IsOptional()
+  latitude?: number;
 
   @IsNumber()
-  longitude: number;
+  @IsOptional()
+  longitude?: number;
 
   @IsString()
+  @IsOptional()
   description: string | null;
+
+  @IsString()
+  @IsOptional()
+  websiteUrl?: string | null;
 }
