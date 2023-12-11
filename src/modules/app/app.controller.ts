@@ -14,11 +14,4 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-
-  @ApiKeyGuard()
-  @Get("/statistics/api-key")
-  @ApiOperation({ summary: "protected by api-key guard - Api-key statistics" })
-  async getApiKeyStatistics() {
-    return this.appService.getApiKeyUsage();
-  }
 }

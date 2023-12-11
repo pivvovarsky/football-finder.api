@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateStadiumDto {
   @IsString()
@@ -18,4 +18,14 @@ export class CreateStadiumDto {
 
   @IsString()
   websiteUrl: string | null;
+
+  @IsString()
+  country: string;
+
+  @IsString()
+  league: string;
+
+  @IsString()
+  @IsOptional()
+  teamDescription?: string | null;
 }

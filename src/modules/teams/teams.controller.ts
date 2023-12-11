@@ -28,7 +28,7 @@ export class TeamsController {
 
   @ApiOperation({ summary: "create a team" })
   @Post()
-  async create(@Body() body: CreateTeamDto): Promise<Team> {
+  async create(@Body() body: CreateTeamDto): Promise<TeamItem> {
     return await this.teamsService.create(body);
   }
 

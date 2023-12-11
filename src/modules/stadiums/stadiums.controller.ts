@@ -10,6 +10,7 @@ import { Prisma } from "src/generated/prisma/client/mongo";
 import { ListResponse } from "src/common/decorators/list-response.decorator";
 
 // @FirebaseJWTGuard()
+//TODO
 @ApiTags("stadiums")
 @Controller("stadiums")
 export class StadiumsController {
@@ -42,7 +43,9 @@ export class StadiumsController {
       longitude: body.longitude,
       description: body.description,
       websiteUrl: body.websiteUrl,
-      team: { create: { name: body.teamName } },
+      team: {
+        create: { name: body.teamName, league: body.league, country: body.country, description: body.teamDescription },
+      },
     };
 
     return await this.stadiumsService.createOne(data);

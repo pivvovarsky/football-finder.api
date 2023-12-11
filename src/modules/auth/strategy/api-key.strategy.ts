@@ -9,16 +9,4 @@ export class ApiKeyStrategy extends PassportStrategy(Strategy, "api-key") {
   constructor(private readonly config: ApiConfigService, private readonly mongoPrismaService: MongoPrismaService) {
     super({ header: "X-API-KEY", prefix: "" }, false);
   }
-
-  public async validate(apiKey: string): Promise<boolean> {
-    const DEFAULT_APP_STATS_ID = "648a5181d3ce8be4d513b36d";
-    if (this.config.apiKey === apiKey) {
-      await this.mongoPrismaService.appStatistics.update({
-        where: { id: DEFAULT_APP_STATS_ID },
-        data: { apiKeyUsage: { increment: 1 } },
-      });
-      return true;
-    }
-    throw new UnauthorizedException();
-  }
 }

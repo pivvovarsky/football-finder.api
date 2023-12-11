@@ -1,3 +1,4 @@
+import { UsersModule } from "./../users/users.module";
 import { StadiumsModule } from "../stadiums/stadiums.module";
 import { TeamsModule } from "./../teams/teams.module";
 import { AuthModule } from "./../auth/auth.module";
@@ -18,6 +19,7 @@ import { FirebaseErrorInterceptor } from "src/common/interceptors/firebase-error
 
 @Module({
   imports: [
+    UsersModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],

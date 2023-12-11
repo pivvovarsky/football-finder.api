@@ -7,9 +7,4 @@ export class AppService {
   getHello(): string {
     return "Hello World!";
   }
-
-  async getApiKeyUsage(): Promise<{ API_KEY_USAGE_COUNT: number | null }> {
-    const apiKeyUsageCount = await this.mongoPrismaSerivce.appStatistics.findFirst();
-    return await { API_KEY_USAGE_COUNT: apiKeyUsageCount?.apiKeyUsage ?? null };
-  }
 }

@@ -8,4 +8,12 @@ export class CreateTeamDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  league: string;
+
+  @IsNotEmpty()
+  @IsString()
+  country: string;
 }

@@ -6,6 +6,8 @@ import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 interface Team {
   name: string;
   description?: string;
+  league: string;
+  country: string;
 }
 
 interface Stadium {
@@ -27,6 +29,8 @@ export class GenerateFakeData extends CommandRunner {
       const teamData: Team = {
         name: `Team ${i}`,
         description: `Description of Team ${i}`,
+        league: `league ${i}`,
+        country: ` country ${i}`,
       };
       const stadiumData: Stadium = {
         name: `Stadium of ${teamData.name}`,
@@ -75,12 +79,6 @@ export class GenerateFakeData extends CommandRunner {
 
     for (let index = 0; index < users.length; index++) {
       Promise.all([
-        this.prismaService.favoriteMatch.create({
-          data: {
-            matchId: matches[index].id,
-            userId: users[index].id,
-          },
-        }),
         this.prismaService.favoriteStadium.create({
           data: {
             stadiumId: stadiums[index].id,

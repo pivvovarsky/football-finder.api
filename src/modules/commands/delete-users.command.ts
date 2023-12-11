@@ -34,16 +34,10 @@ export class DeleteUsers extends CommandRunner {
     for (const user of prismaUsers) {
       usersUids.push(user.id);
       await Promise.all([
-        this.prismaService.favoriteMatch.deleteMany({
-          where: { userId: user.id },
-        }),
         this.prismaService.favoriteStadium.deleteMany({
           where: { userId: user.id },
         }),
         this.prismaService.favoriteTeam.deleteMany({
-          where: { userId: user.id },
-        }),
-        this.prismaService.settings.deleteMany({
           where: { userId: user.id },
         }),
       ]);
