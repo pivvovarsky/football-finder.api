@@ -29,8 +29,12 @@ export class StadiumsService {
   }
 
   public async uploadImage(id: string, file: Express.Multer.File) {
+    const validStadium = await this.mongoPrismaService.stadium.findUnique({ where: { id } });
+    if (!validStadium) throw new NotFoundException("Not found stadium");
+
     const firebaseImageUrl = await this.firebaseStorageService.uploadImage(id, file);
     await this.mongoPrismaService.stadium.update({ where: { id: id }, data: { imageUrl: firebaseImageUrl } });
+
     return firebaseImageUrl;
   }
 

@@ -1,3 +1,4 @@
+import { MatchesModule } from "./../matches/matches.module";
 import { UsersModule } from "./../users/users.module";
 import { StadiumsModule } from "../stadiums/stadiums.module";
 import { TeamsModule } from "./../teams/teams.module";
@@ -19,6 +20,7 @@ import { FirebaseErrorInterceptor } from "src/common/interceptors/firebase-error
 
 @Module({
   imports: [
+    MatchesModule,
     UsersModule,
     ConfigModule.forRoot({
       isGlobal: true,

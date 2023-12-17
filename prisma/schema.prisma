@@ -28,7 +28,6 @@ model Team {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
   name         String
   imageUrl     String?
-  description  String?
   league       String
   country      String
   createdAt    DateTime       @default(now())
@@ -51,7 +50,6 @@ model Stadium {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   ratings     Rating[]
-  matches     Match[]
 
   teamId          String            @unique @db.ObjectId
   team            Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
@@ -60,14 +58,12 @@ model Stadium {
 
 model Match {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  stadium    Stadium  @relation(fields: [stadiumId], references: [id])
-  stadiumId  String   @db.ObjectId
   host       Team     @relation("MatchHost", fields: [hostId], references: [id])
   hostId     String   @db.ObjectId
   guest      Team     @relation("MatchGuest", fields: [guestId], references: [id])
   guestId    String   @db.ObjectId
-  hostGoals  Int
-  guestGoals Int
+  hostGoals  Int?
+  guestGoals Int?
   date       DateTime
 
   createdAt DateTime @default(now())

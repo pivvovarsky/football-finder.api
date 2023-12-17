@@ -4,11 +4,10 @@ import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Team } from "src/generated/prisma/client/mongo";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateTeamDto } from "./dto/update-team.dto";
-import { CreateTeamDto } from "./dto/create-team.dto";
 import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
 import { TeamItem } from "./models/team-item.model";
 
-@FirebaseJWTGuard()
+// @FirebaseJWTGuard()
 @ApiTags("teams")
 @Controller("teams")
 export class TeamsController {
@@ -16,7 +15,7 @@ export class TeamsController {
 
   @ApiOperation({ summary: "protected by firbease-JWT - get all the teams" })
   @Get()
-  async getMany(): Promise<TeamItem[]> {
+  async getMany() {
     return await this.teamsService.getMany();
   }
 
@@ -24,12 +23,6 @@ export class TeamsController {
   @Get(":id")
   async getOne(@Param("id") id: string): Promise<TeamItem> {
     return await this.teamsService.getOne(id);
-  }
-
-  @ApiOperation({ summary: "create a team" })
-  @Post()
-  async create(@Body() body: CreateTeamDto): Promise<TeamItem> {
-    return await this.teamsService.create(body);
   }
 
   @ApiOperation({ summary: "update team" })

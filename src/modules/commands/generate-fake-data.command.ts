@@ -56,7 +56,6 @@ export class GenerateFakeData extends CommandRunner {
             data: {
               hostId: teams[i].id,
               guestId: teams[i + 1].id,
-              stadiumId: hostStadium?.id,
               guestGoals: i,
               hostGoals: i + 1,
               date: TODAY,

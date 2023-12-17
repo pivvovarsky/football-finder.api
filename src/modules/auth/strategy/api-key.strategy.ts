@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import Strategy from "passport-headerapikey";
 import { ApiConfigService } from "src/common/services/api-config.service";

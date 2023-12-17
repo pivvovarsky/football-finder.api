@@ -15,8 +15,12 @@ export class TeamsService {
     });
   }
 
-  public async getMany(): Promise<TeamItem[]> {
-    return await this.mongoPrismaService.team.findMany({ include: { stadium: true } });
+  public async getMany() {
+    const [data, count] = await Promise.all([
+      this.mongoPrismaService.team.findMany({ include: { stadium: true } }),
+      this.mongoPrismaService.team.count(),
+    ]);
+    return { data, count };
   }
 
   public async getOne(id: string) {
@@ -35,6 +39,9 @@ export class TeamsService {
   }
 
   public async uploadImage(id: string, file: Express.Multer.File) {
+    const validTeam = await this.mongoPrismaService.team.findUnique({ where: { id } });
+    if (!validTeam) throw new NotFoundException("Not found team");
+
     const firebaseImageUrl = await this.firebaseStorageService.uploadImage(id, file);
     await this.mongoPrismaService.team.update({ where: { id: id }, data: { imageUrl: firebaseImageUrl } });
     return firebaseImageUrl;

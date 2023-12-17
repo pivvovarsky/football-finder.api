@@ -4,9 +4,6 @@ import { StadiumItem } from "src/modules/stadiums/models/stadium-item.model";
 
 export class TeamItem implements TeamModel {
   @ApiProperty()
-  description: string | null;
-
-  @ApiProperty()
   id: string;
 
   @ApiProperty()

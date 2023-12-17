@@ -44,7 +44,7 @@ export class StadiumsController {
       description: body.description,
       websiteUrl: body.websiteUrl,
       team: {
-        create: { name: body.teamName, league: body.league, country: body.country, description: body.teamDescription },
+        create: { name: body.teamName, league: body.league, country: body.country },
       },
     };
 

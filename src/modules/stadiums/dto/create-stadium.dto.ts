@@ -24,8 +24,4 @@ export class CreateStadiumDto {
 
   @IsString()
   league: string;
-
-  @IsString()
-  @IsOptional()
-  teamDescription?: string | null;
 }
