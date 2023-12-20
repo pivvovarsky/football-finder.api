@@ -8,8 +8,7 @@ import { ApiKeyGuard } from "src/common/decorators/guards/api-key.decorator";
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @ApiKeyGuard()
-  @ApiOperation({ summary: "protected by api-key guard - Api health check" })
+  @ApiOperation({ summary: "Api health check" })
   @Get("api-check")
   getHello(): string {
     return this.appService.getHello();

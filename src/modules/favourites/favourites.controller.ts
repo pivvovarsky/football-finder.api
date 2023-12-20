@@ -6,8 +6,11 @@ import { Controller, Get, Param, Put } from "@nestjs/common";
 import { AuthPayload } from "../auth/models/auth-payload.model";
 import { User } from "src/common/decorators/user.decorator";
 import { FavouritesService } from "./favourites.service";
-
-@Controller()
+import { ApiTags } from "@nestjs/swagger";
+import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
+@FirebaseJWTGuard()
+@ApiTags("user-favourites")
+@Controller("users")
 export class FavouritesController {
   constructor(private favouritesService: FavouritesService) {}
 
