@@ -97,7 +97,7 @@ model FavoriteTeam {
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique
   team   Team   @relation(fields: [teamId], references: [id])
-  teamId String @db.ObjectId
+  teamId String @unique @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

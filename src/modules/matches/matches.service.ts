@@ -31,15 +31,4 @@ export class MatchesService {
     const count = await this.mongoPrismaService.match.count();
     return { data, count };
   }
-
-  public async getAllFavourite() {
-    const data = await this.mongoPrismaService.match.findMany({
-      include: {
-        guest: { select: { name: true, imageUrl: true } },
-        host: { select: { name: true, imageUrl: true, stadium: { select: { name: true } } } },
-      },
-    });
-    const count = await this.mongoPrismaService.match.count();
-    return { data, count };
-  }
 }
