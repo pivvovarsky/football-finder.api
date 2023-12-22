@@ -8,7 +8,7 @@ import { TeamsService } from "../teams/teams.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { FavouriteDetails } from "./models/favourite-details.model";
 import { TeamItem } from "../teams/models/team-item.model";
-import { FavoriteTeam, Stadium, Team } from "src/generated/prisma/client/mongo";
+import { FavoriteTeam, Prisma, Stadium, Team } from "src/generated/prisma/client/mongo";
 
 @Injectable()
 export class FavouritesService {
@@ -19,14 +19,14 @@ export class FavouritesService {
   ) {}
 
   async unlikeTeam(userId: string, teamId: string): Promise<FavouriteDetails> {
-    await this.prismaService.user.update({
-      where: { id: userId },
-      data: {
-        favoriteTeams: {
-          delete: { id: teamId },
-        },
+    const favTeam = await this.prismaService.favoriteTeam.findFirstOrThrow({
+      where: {
+        userId,
+        teamId,
       },
     });
+
+    await this.prismaService.favoriteTeam.delete({ where: { id: favTeam.id } });
 
     return { liked: false };
   }
@@ -43,14 +43,14 @@ export class FavouritesService {
   }
 
   async unlikeStadium(userId: string, stadiumId: string): Promise<FavouriteDetails> {
-    await this.prismaService.user.update({
-      where: { id: userId },
-      data: {
-        favoriteStadiums: {
-          delete: { id: stadiumId },
-        },
+    const favSt = await this.prismaService.favoriteStadium.findFirstOrThrow({
+      where: {
+        userId,
+        stadiumId,
       },
     });
+
+    await this.prismaService.favoriteStadium.delete({ where: { id: favSt.id } });
 
     return { liked: false };
   }
@@ -91,7 +91,7 @@ export class FavouritesService {
   }
 
   async favouriteStadium(userId: string, stadiumId: string): Promise<FavouriteDetails> {
-    const alreadyLiked = await this.prismaService.favoriteStadium.findUnique({
+    const alreadyLiked = await this.prismaService.favoriteStadium.findFirst({
       where: {
         userId,
         stadiumId,
@@ -102,7 +102,7 @@ export class FavouritesService {
   }
 
   async favouriteTeam(userId: string, teamId: string): Promise<FavouriteDetails> {
-    const alreadyLiked = await this.prismaService.favoriteTeam.findUnique({
+    const alreadyLiked = await this.prismaService.favoriteTeam.findFirst({
       where: {
         userId,
         teamId,
@@ -110,5 +110,32 @@ export class FavouritesService {
     });
 
     return alreadyLiked ? await this.unlikeTeam(userId, teamId) : await this.likeTeam(userId, teamId);
+  }
+
+  async getFavouriteStadium(uuid: string, stadiumid: string): Promise<FavouriteDetails> {
+    const stadium = await this.prismaService.stadium.findFirst({ where: { id: stadiumid } });
+    const user = await this.prismaService.user.findFirstOrThrow({ where: { id: uuid } });
+
+    const alreadyLiked = await this.prismaService.favoriteStadium.findFirst({
+      where: {
+        userId: uuid,
+        stadiumId: stadium?.id,
+        user: user,
+      },
+    });
+
+    return { liked: !!alreadyLiked };
+  }
+
+  async getFavouriteTeam(uuid: string, teamId: string): Promise<FavouriteDetails> {
+    const team = await this.prismaService.team.findFirst({ where: { id: teamId } });
+    const alreadyLiked = await this.prismaService.favoriteTeam.findFirst({
+      where: {
+        userId: uuid,
+        teamId: team?.id,
+      },
+    });
+
+    return { liked: !!alreadyLiked };
   }
 }

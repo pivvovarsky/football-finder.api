@@ -1,3 +1,4 @@
+import { RatingsModule } from "./../ratings/ratings.module";
 import { FavouritesModule } from "./../favourites/favourites.module";
 import { MatchesModule } from "./../matches/matches.module";
 import { UsersModule } from "./../users/users.module";
@@ -21,6 +22,7 @@ import { FirebaseErrorInterceptor } from "src/common/interceptors/firebase-error
 
 @Module({
   imports: [
+    RatingsModule,
     FavouritesModule,
     MatchesModule,
     UsersModule,

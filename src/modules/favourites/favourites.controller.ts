@@ -35,12 +35,22 @@ export class FavouritesController {
   }
 
   @Put("me/favourite-teams/:id")
-  async likeSession(@Param("id") id: string, @User() user: AuthPayload) {
+  async likeTeam(@Param("id") id: string, @User() user: AuthPayload) {
     return await this.favouritesService.favouriteTeam(user.uid, id);
   }
 
   @Put("me/favourite-stadiums/:id")
-  async likePattern(@Param("id") id: string, @User() user: AuthPayload) {
+  async likeStadium(@Param("id") id: string, @User() user: AuthPayload) {
     return await this.favouritesService.favouriteStadium(user.uid, id);
+  }
+
+  @Get("me/favourite-stadiums/:id")
+  async getFavouriteSession(@Param("id") id: string, @User() user: AuthPayload) {
+    return await this.favouritesService.getFavouriteStadium(user.uid, id);
+  }
+
+  @Get("me/favourite-teams/:id")
+  async getFavouriteTeam(@Param("id") id: string, @User() user: AuthPayload) {
+    return await this.favouritesService.getFavouriteTeam(user.uid, id);
   }
 }
