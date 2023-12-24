@@ -2,10 +2,10 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { FirebaseStorageService } from "src/common/services/firebase/firebase-storage.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
-import { Prisma } from "src/generated/prisma/client/mongo";
+import { Match, Prisma } from "src/generated/prisma/client/mongo";
 import { CreateMatchDto } from "./dto/create-match.dto";
 import { MatchItem } from "./models/match-item.model";
 
@@ -21,14 +21,98 @@ export class MatchesService {
     const data = await this.mongoPrismaService.match.findMany({
       include: {
         guest: {
-          select: { name: true, imageUrl: true, league: true, country: true, stadium: { select: { name: true } } },
+          select: {
+            name: true,
+            imageUrl: true,
+            league: true,
+            country: true,
+            stadium: { select: { name: true, websiteUrl: true } },
+          },
         },
         host: {
-          select: { name: true, imageUrl: true, league: true, country: true, stadium: { select: { name: true } } },
+          select: {
+            name: true,
+            imageUrl: true,
+            league: true,
+            country: true,
+            stadium: { select: { name: true, websiteUrl: true } },
+          },
         },
       },
     });
     const count = await this.mongoPrismaService.match.count();
     return { data, count };
+  }
+
+  public async getFavouriteMatches(userUid: string) {
+    if (!userUid) throw new BadRequestException("Enter correct userUid");
+
+    const [favouriteTeams, favouriteStadiums] = await Promise.all([
+      this.mongoPrismaService.favoriteTeam.findMany({ where: { userId: userUid } }),
+      this.mongoPrismaService.favoriteStadium.findMany({ where: { userId: userUid } }),
+    ]);
+
+    const favouriteMatches: Match[] = [];
+
+    for (const favTeam of favouriteTeams) {
+      const favMatch = await this.mongoPrismaService.match.findFirst({
+        where: { hostId: favTeam.teamId },
+        include: {
+          guest: {
+            select: {
+              name: true,
+              imageUrl: true,
+              league: true,
+              country: true,
+              stadium: true,
+            },
+          },
+          host: {
+            select: {
+              name: true,
+              imageUrl: true,
+              league: true,
+              country: true,
+              stadium: true,
+            },
+          },
+        },
+      });
+      if (favMatch) favouriteMatches.push(favMatch);
+    }
+
+    for (const favStadium of favouriteStadiums) {
+      const favMatch = await this.mongoPrismaService.match.findMany({
+        where: { host: { stadium: { id: favStadium.stadiumId } } },
+        orderBy: { date: "asc" },
+        include: {
+          guest: {
+            select: {
+              name: true,
+              imageUrl: true,
+              league: true,
+              country: true,
+              stadium: true,
+            },
+          },
+          host: {
+            select: {
+              name: true,
+              imageUrl: true,
+              league: true,
+              country: true,
+              stadium: true,
+            },
+          },
+        },
+      });
+
+      if (favMatch.length > 0) favouriteMatches.push(favMatch[0]);
+    }
+    const uniqueData = favouriteMatches.filter(
+      (value, index, self) => self.findIndex((m) => m.id === value.id) === index,
+    );
+
+    return { data: uniqueData, count: uniqueData.length };
   }
 }
