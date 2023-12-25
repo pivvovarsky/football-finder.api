@@ -14,12 +14,6 @@ export class MatchItem implements Match {
   guestId: string;
 
   @ApiProperty()
-  hostGoals: number | null;
-
-  @ApiProperty()
-  guestGoals: number | null;
-
-  @ApiProperty()
   date: Date;
 
   @ApiProperty()

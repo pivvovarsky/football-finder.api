@@ -1,13 +1,13 @@
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { StadiumsService } from "./stadiums.service";
-import { Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { StadiumItem } from "./models/stadium-item.model";
 import { UpdateStadiumDto } from "./dto/update-stadium.dto";
-import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
 import { CreateStadiumDto } from "./dto/create-stadium.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Prisma } from "src/generated/prisma/client/mongo";
 import { ListResponse } from "src/common/decorators/list-response.decorator";
+import { ObjectId } from "mongodb";
 
 // @FirebaseJWTGuard()
 //TODO
@@ -74,5 +74,11 @@ export class StadiumsController {
   @Get(":id/imageUrl")
   async getUrlImage(@Param("id") id: string) {
     return await this.stadiumsService.getUrlImage(id);
+  }
+
+  @ApiOperation({ summary: "get next match at stadium" })
+  @Get(":id/next-match")
+  async getNextMatch(@Param("id") id: string) {
+    return await this.stadiumsService.getNextMatch(id);
   }
 }

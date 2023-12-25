@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { ObjectId } from "mongodb";
 import { FirebaseStorageService } from "src/common/services/firebase/firebase-storage.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { Prisma } from "src/generated/prisma/client/mongo";
@@ -7,6 +8,14 @@ import { Prisma } from "src/generated/prisma/client/mongo";
 export class StadiumsService {
   constructor(private mongoPrismaService: MongoPrismaService, private firebaseStorageService: FirebaseStorageService) {}
 
+  private isValidID(id: string) {
+    if (!ObjectId.isValid(id)) {
+      throw new BadRequestException(
+        "Invalid ID - ObjectID: provided hex string representation must be exactly 12 bytes",
+      );
+    }
+  }
+
   public async getMany() {
     const data = await this.mongoPrismaService.stadium.findMany();
     const count = await this.mongoPrismaService.stadium.count();
@@ -14,6 +23,7 @@ export class StadiumsService {
   }
 
   public async getOne(id: string) {
+    this.isValidID(id);
     const stadium = await this.mongoPrismaService.stadium.findFirst({ where: { id: id } });
     if (!stadium) {
       throw new NotFoundException();
@@ -21,6 +31,7 @@ export class StadiumsService {
   }
 
   public async updateOne(id: string, data: Prisma.StadiumUncheckedUpdateInput) {
+    this.isValidID(id);
     return await this.mongoPrismaService.stadium.update({ where: { id: id }, data });
   }
 
@@ -29,6 +40,7 @@ export class StadiumsService {
   }
 
   public async uploadImage(id: string, file: Express.Multer.File) {
+    this.isValidID(id);
     const validStadium = await this.mongoPrismaService.stadium.findUnique({ where: { id } });
     if (!validStadium) throw new NotFoundException("Not found stadium");
 
@@ -39,7 +51,23 @@ export class StadiumsService {
   }
 
   public async getUrlImage(id: string) {
+    this.isValidID(id);
     const firebaseImageUrl = await this.firebaseStorageService.getImageUrl(id);
     return firebaseImageUrl;
+  }
+
+  public async getNextMatch(stadiumId: string) {
+    this.isValidID(stadiumId);
+    const stadium = await this.mongoPrismaService.stadium.findUniqueOrThrow({ where: { id: stadiumId } });
+    if (!stadium) {
+      throw new NotFoundException();
+    }
+
+    const matches = await this.mongoPrismaService.match.findMany({
+      where: { host: { stadium: { id: stadiumId } } },
+      orderBy: { date: "asc" },
+    });
+
+    return { data: matches[0] };
   }
 }

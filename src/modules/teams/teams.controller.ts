@@ -6,6 +6,8 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateTeamDto } from "./dto/update-team.dto";
 import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
 import { TeamItem } from "./models/team-item.model";
+import { User } from "src/common/decorators/user.decorator";
+import { AuthPayload } from "../auth/models/auth-payload.model";
 
 // @FirebaseJWTGuard()
 @ApiTags("teams")
@@ -14,9 +16,10 @@ export class TeamsController {
   constructor(private teamsService: TeamsService) {}
 
   @ApiOperation({ summary: "protected by firbease-JWT - get all the teams" })
+  @FirebaseJWTGuard()
   @Get()
-  async getMany() {
-    return await this.teamsService.getMany();
+  async getMany(@User() user: AuthPayload) {
+    return await this.teamsService.getMany(user.uid);
   }
 
   @ApiOperation({ summary: "get one team" })

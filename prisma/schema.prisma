@@ -57,14 +57,12 @@ model Stadium {
 }
 
 model Match {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  host       Team     @relation("MatchHost", fields: [hostId], references: [id])
-  hostId     String   @db.ObjectId
-  guest      Team     @relation("MatchGuest", fields: [guestId], references: [id])
-  guestId    String   @db.ObjectId
-  hostGoals  Int?
-  guestGoals Int?
-  date       DateTime
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  host    Team     @relation("MatchHost", fields: [hostId], references: [id])
+  hostId  String   @db.ObjectId
+  guest   Team     @relation("MatchGuest", fields: [guestId], references: [id])
+  guestId String   @db.ObjectId
+  date    DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -8,10 +8,11 @@ import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { Match, Prisma } from "src/generated/prisma/client/mongo";
 import { CreateMatchDto } from "./dto/create-match.dto";
 import { MatchItem } from "./models/match-item.model";
+import { ObjectId } from "mongodb";
 
 @Injectable()
 export class MatchesService {
-  constructor(private mongoPrismaService: MongoPrismaService, private firebaseStorageService: FirebaseStorageService) {}
+  constructor(private mongoPrismaService: MongoPrismaService) {}
 
   public async createOne(data: CreateMatchDto): Promise<MatchItem> {
     return await this.mongoPrismaService.match.create({ data });
@@ -53,10 +54,10 @@ export class MatchesService {
     ]);
 
     const favouriteMatches: Match[] = [];
-
+    const today = new Date();
     for (const favTeam of favouriteTeams) {
       const favMatch = await this.mongoPrismaService.match.findFirst({
-        where: { hostId: favTeam.teamId },
+        where: { OR: [{ hostId: favTeam.teamId }, { guestId: favTeam.teamId }], date: { gte: today } },
         include: {
           guest: {
             select: {
@@ -83,7 +84,7 @@ export class MatchesService {
 
     for (const favStadium of favouriteStadiums) {
       const favMatch = await this.mongoPrismaService.match.findMany({
-        where: { host: { stadium: { id: favStadium.stadiumId } } },
+        where: { host: { stadium: { id: favStadium.stadiumId } }, date: { gte: today } },
         orderBy: { date: "asc" },
         include: {
           guest: {
@@ -109,8 +110,9 @@ export class MatchesService {
 
       if (favMatch.length > 0) favouriteMatches.push(favMatch[0]);
     }
+
     const uniqueData = favouriteMatches.filter(
-      (value, index, self) => self.findIndex((m) => m.id === value.id) === index,
+      (item, index, self) => self.findIndex((selfItem) => selfItem.id === item.id) === index,
     );
 
     return { data: uniqueData, count: uniqueData.length };

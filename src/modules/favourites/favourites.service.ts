@@ -2,23 +2,28 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { StadiumsService } from "../stadiums/stadiums.service";
 import { TeamsService } from "../teams/teams.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { FavouriteDetails } from "./models/favourite-details.model";
-import { TeamItem } from "../teams/models/team-item.model";
-import { FavoriteTeam, Prisma, Stadium, Team } from "src/generated/prisma/client/mongo";
+import { Stadium, Team } from "src/generated/prisma/client/mongo";
+import { ObjectId } from "mongodb";
 
 @Injectable()
 export class FavouritesService {
-  constructor(
-    private prismaService: MongoPrismaService,
-    private stadiumsService: StadiumsService,
-    private teamService: TeamsService,
-  ) {}
+  constructor(private prismaService: MongoPrismaService) {}
+
+  private isValidID(id: string) {
+    if (!ObjectId.isValid(id)) {
+      throw new BadRequestException(
+        "Invalid ID - ObjectID: provided hex string representation must be exactly 12 bytes",
+      );
+    }
+  }
 
   async unlikeTeam(userId: string, teamId: string): Promise<FavouriteDetails> {
+    this.isValidID(teamId);
     const favTeam = await this.prismaService.favoriteTeam.findFirstOrThrow({
       where: {
         userId,
@@ -32,6 +37,7 @@ export class FavouritesService {
   }
 
   async likeTeam(userId: string, teamId: string): Promise<FavouriteDetails> {
+    this.isValidID(teamId);
     await this.prismaService.favoriteTeam.create({
       data: {
         userId,
@@ -43,6 +49,7 @@ export class FavouritesService {
   }
 
   async unlikeStadium(userId: string, stadiumId: string): Promise<FavouriteDetails> {
+    this.isValidID(stadiumId);
     const favSt = await this.prismaService.favoriteStadium.findFirstOrThrow({
       where: {
         userId,
@@ -56,6 +63,7 @@ export class FavouritesService {
   }
 
   async likeStadium(userId: string, stadiumId: string): Promise<FavouriteDetails> {
+    this.isValidID(stadiumId);
     await this.prismaService.favoriteStadium.create({
       data: {
         userId,
@@ -91,6 +99,7 @@ export class FavouritesService {
   }
 
   async favouriteStadium(userId: string, stadiumId: string): Promise<FavouriteDetails> {
+    this.isValidID(stadiumId);
     const alreadyLiked = await this.prismaService.favoriteStadium.findFirst({
       where: {
         userId,
@@ -102,6 +111,7 @@ export class FavouritesService {
   }
 
   async favouriteTeam(userId: string, teamId: string): Promise<FavouriteDetails> {
+    this.isValidID(teamId);
     const alreadyLiked = await this.prismaService.favoriteTeam.findFirst({
       where: {
         userId,
@@ -113,6 +123,7 @@ export class FavouritesService {
   }
 
   async getFavouriteStadium(uuid: string, stadiumid: string): Promise<FavouriteDetails> {
+    this.isValidID(stadiumid);
     const stadium = await this.prismaService.stadium.findFirst({ where: { id: stadiumid } });
     const user = await this.prismaService.user.findFirstOrThrow({ where: { id: uuid } });
 
@@ -128,6 +139,7 @@ export class FavouritesService {
   }
 
   async getFavouriteTeam(uuid: string, teamId: string): Promise<FavouriteDetails> {
+    this.isValidID(teamId);
     const team = await this.prismaService.team.findFirst({ where: { id: teamId } });
     const alreadyLiked = await this.prismaService.favoriteTeam.findFirst({
       where: {

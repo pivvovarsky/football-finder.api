@@ -24,18 +24,6 @@ export class MatchesController {
     return await this.matchesService.getMany();
   }
 
-  //   @ApiOperation({ summary: "protected by firbease-JWT - get one stadium" })
-  //   @Get(":id")
-  //   async getOne(@Param("id") id: string): Promise<MatchItem> {
-  //     return await this.macthesService.getOne(id);
-  //   }
-
-  //   @ApiOperation({ summary: "protected by firbease-JWT - update the stadium" })
-  //   @Put(":id")
-  //   async update(@Param("id") id: string, @Body() body: UpdateStadiumDto): Promise<StadiumItem> {
-  //     return await this.stadiumsService.updateOne(id, body);
-  //   }
-
   @Post()
   async create(@Body() body: CreateMatchDto): Promise<MatchItem> {
     return await this.matchesService.createOne(body);
@@ -44,7 +32,6 @@ export class MatchesController {
   @FirebaseJWTGuard()
   @Get("upcoming")
   async getUpcommingMatches(@User() user: AuthPayload) {
-    console.log(user.uid);
     return await this.matchesService.getFavouriteMatches(user.uid);
   }
 }
