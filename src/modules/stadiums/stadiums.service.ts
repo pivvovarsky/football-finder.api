@@ -62,12 +62,13 @@ export class StadiumsService {
     if (!stadium) {
       throw new NotFoundException();
     }
-
+    const today = new Date();
     const matches = await this.mongoPrismaService.match.findMany({
-      where: { host: { stadium: { id: stadiumId } } },
+      where: { host: { stadium: { id: stadiumId } }, date: { gte: today } },
       orderBy: { date: "asc" },
+      include: { host: true, guest: true },
     });
 
-    return { data: matches[0] };
+    return { ...matches[0] };
   }
 }

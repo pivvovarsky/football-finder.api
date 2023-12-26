@@ -1,7 +1,6 @@
 import { RatingsModule } from "./../ratings/ratings.module";
 import { FavouritesModule } from "./../favourites/favourites.module";
 import { MatchesModule } from "./../matches/matches.module";
-import { UsersModule } from "./../users/users.module";
 import { StadiumsModule } from "../stadiums/stadiums.module";
 import { TeamsModule } from "./../teams/teams.module";
 import { AuthModule } from "./../auth/auth.module";
@@ -22,10 +21,6 @@ import { FirebaseErrorInterceptor } from "src/common/interceptors/firebase-error
 
 @Module({
   imports: [
-    RatingsModule,
-    FavouritesModule,
-    MatchesModule,
-    UsersModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
@@ -36,7 +31,7 @@ import { FirebaseErrorInterceptor } from "src/common/interceptors/firebase-error
         transport: configService.mailer.transport,
         defaults: configService.mailer.defaults,
         template: {
-          dir: join(__dirname, "templates"),
+          dir: join(__dirname, "../../templates"),
           adapter: new EjsAdapter(),
           options: {
             strict: false,
@@ -46,9 +41,12 @@ import { FirebaseErrorInterceptor } from "src/common/interceptors/firebase-error
       inject: [ApiConfigService],
     }),
     GlobalModule,
+    AuthModule,
     StadiumsModule,
     TeamsModule,
-    AuthModule,
+    MatchesModule,
+    FavouritesModule,
+    RatingsModule,
   ],
   controllers: [AppController],
   providers: [

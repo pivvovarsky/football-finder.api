@@ -13,8 +13,6 @@ datasource db {
 
 model User {
   id                   String            @id @map("_id")
-  firstName            String
-  lastName             String
   email                String            @unique
   createdAt            DateTime          @default(now())
   updatedAt            DateTime          @updatedAt
@@ -70,10 +68,11 @@ model Match {
 
 model Rating {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   stadium   Stadium @relation(fields: [stadiumId], references: [id])
   stadiumId String  @db.ObjectId
+  rating    Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -81,7 +80,7 @@ model Rating {
 
 model FavoriteStadium {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   stadium   Stadium @relation(fields: [stadiumId], references: [id])
   stadiumId String  @db.ObjectId
@@ -92,7 +91,7 @@ model FavoriteStadium {
 
 model FavoriteTeam {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   team   Team   @relation(fields: [teamId], references: [id])
   teamId String @db.ObjectId

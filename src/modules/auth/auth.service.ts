@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   public async signUp(data: { email: string; password: string; firstName?: string; lastName?: string }) {
-    const { firstName, lastName, email } = data;
+    const { email } = data;
     const userExists = await this.prismaService.user.findFirst({ where: { email: email } });
     if (userExists) throw new ConflictException("User in use");
     const firebaseUserId = await this.firebaseAuthSerivce.createUser(data);
@@ -35,8 +35,6 @@ export class AuthService {
       data: {
         id: firebaseUserId,
         email: email,
-        firstName: firstName ?? "",
-        lastName: lastName ?? "",
       },
     });
   }
@@ -52,12 +50,12 @@ export class AuthService {
           subject: "Football Finder - Activate your Account",
           template: "activate-account",
           context: {
-            name: firebaseUser.displayName,
+            name: firebaseUser.email,
             link: activationLink,
           },
         })
         .then(() => {
-          this.logger.debug("mail sent");
+          this.logger.debug("mail sent", firebaseUser.email);
         })
         .catch((error) => {
           this.logger.error("error", error);
@@ -76,7 +74,7 @@ export class AuthService {
           subject: "Football Finder - Reset your account password",
           template: "reset-password",
           context: {
-            name: firebaseUser.displayName,
+            name: firebaseUser.email,
             link: activationLink,
           },
         })
@@ -95,7 +93,7 @@ export class AuthService {
 
   public async login(body: { email: string; password: string }) {
     const key = await this.apiConfigService.firebase.key;
-    const url = " https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
+    const url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
     const response = await axios.post(
       url,
       { ...body, returnSecureToken: true },

@@ -1,7 +1,8 @@
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
 
 export class CreateStadiumDto {
   @IsString()
+  @MaxLength(50)
   name: string;
 
   @IsNumber()
@@ -11,6 +12,7 @@ export class CreateStadiumDto {
   longitude: number;
 
   @IsString()
+  @MaxLength(200)
   description: string | null;
 
   @IsString()
