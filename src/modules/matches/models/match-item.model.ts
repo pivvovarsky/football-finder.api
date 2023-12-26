@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { extend } from "dayjs";
 import { Match, Team } from "src/generated/prisma/client/mongo";
-import { TeamItem } from "src/modules/teams/models/team-item.model";
 
 export class MatchItem implements Match {
   @ApiProperty()

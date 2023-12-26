@@ -1,3 +1,6 @@
+import { UsersModule } from "./../users/users.module";
+import { NewslettersService } from "../newsletters/newsletters.service";
+import { NewslettersModule } from "./../newsletters/newsletters.module";
 import { RatingsModule } from "./../ratings/ratings.module";
 import { FavouritesModule } from "./../favourites/favourites.module";
 import { MatchesModule } from "./../matches/matches.module";
@@ -18,6 +21,7 @@ import { ApiConfigService } from "src/common/services/api-config.service";
 import { PrismaExceptionsFilter } from "src/common/filteres/prisma-exception.filter";
 import { FirebaseExceptionsFilter } from "src/common/filteres/firebase-exception.filter";
 import { FirebaseErrorInterceptor } from "src/common/interceptors/firebase-error.interceptor";
+import { ScheduleModule as CronModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
@@ -25,6 +29,7 @@ import { FirebaseErrorInterceptor } from "src/common/interceptors/firebase-error
       isGlobal: true,
       load: [configuration],
     }),
+    CronModule.forRoot(),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ApiConfigService) => ({
@@ -42,11 +47,13 @@ import { FirebaseErrorInterceptor } from "src/common/interceptors/firebase-error
     }),
     GlobalModule,
     AuthModule,
+    UsersModule,
     StadiumsModule,
     TeamsModule,
     MatchesModule,
     FavouritesModule,
     RatingsModule,
+    NewslettersModule,
   ],
   controllers: [AppController],
   providers: [

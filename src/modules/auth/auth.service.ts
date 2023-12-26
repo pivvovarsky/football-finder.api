@@ -1,5 +1,13 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { ConflictException, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { Operation } from "src/common/enums/Operation";
 import { ApiConfigService } from "src/common/services/api-config.service";
 import { FirebaseAuthService } from "src/common/services/firebase/firebase-auth.service";
@@ -92,27 +100,42 @@ export class AuthService {
   }
 
   public async login(body: { email: string; password: string }) {
-    const key = await this.apiConfigService.firebase.key;
-    const url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
-    const response = await axios.post(
-      url,
-      { ...body, returnSecureToken: true },
-      {
-        params: {
-          key: key,
-        },
-      },
-    );
-    const firebaseUser = await this.firebaseAuthSerivce.getUser(response.data.localId);
-    if (!firebaseUser.emailVerified) {
-      throw new UnauthorizedException("Your email is not verified");
-    } else {
-      return {
-        email: response.data.email,
-        name: response.data.displayName,
-        emailVerified: firebaseUser.emailVerified,
-        token: response.data.idToken,
-      };
+    try {
+      const key = await this.apiConfigService.firebase.key;
+      const url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
+
+      const response = await axios
+        .post(
+          url,
+          { ...body, returnSecureToken: true },
+          {
+            params: {
+              key: key,
+            },
+          },
+        )
+        .catch((error) => {
+          throw new BadRequestException(`Error during authentication: ${error.message}`);
+        });
+
+      if (!response || !response.data || !response.data.localId) {
+        throw new InternalServerErrorException("Invalid response from server");
+      }
+
+      const firebaseUser = await this.firebaseAuthSerivce.getUser(response.data.localId);
+      if (!firebaseUser.emailVerified) {
+        throw new UnauthorizedException("Email is not verified");
+      } else {
+        return {
+          email: response.data.email,
+          name: response.data.displayName,
+          emailVerified: firebaseUser.emailVerified,
+          token: response.data.idToken,
+        };
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 }

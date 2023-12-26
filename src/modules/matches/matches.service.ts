@@ -15,6 +15,14 @@ export class MatchesService {
   constructor(private mongoPrismaService: MongoPrismaService) {}
 
   public async createOne(data: CreateMatchDto): Promise<MatchItem> {
+    if (data.hostId === data.guestId) throw new BadRequestException("Host and Guest cannot be the same");
+    const [host, guest] = await Promise.all([
+      this.mongoPrismaService.team.findUnique({ where: { id: data.hostId } }),
+      this.mongoPrismaService.team.findUnique({ where: { id: data.guestId } }),
+    ]);
+
+    if (!host || !guest) throw new BadRequestException("Host or Guest not found");
+
     return await this.mongoPrismaService.match.create({ data });
   }
 
@@ -58,6 +66,7 @@ export class MatchesService {
     for (const favTeam of favouriteTeams) {
       const favMatch = await this.mongoPrismaService.match.findFirst({
         where: { OR: [{ hostId: favTeam.teamId }, { guestId: favTeam.teamId }], date: { gte: today } },
+        orderBy: { date: "asc" },
         include: {
           guest: {
             select: {
@@ -111,9 +120,9 @@ export class MatchesService {
       if (favMatch.length > 0) favouriteMatches.push(favMatch[0]);
     }
 
-    const uniqueData = favouriteMatches.filter(
-      (item, index, self) => self.findIndex((selfItem) => selfItem.id === item.id) === index,
-    );
+    const uniqueData = favouriteMatches
+      .sort((a, b) => a.date.getTime() - b.date.getTime())
+      .filter((item, index, self) => self.findIndex((selfItem) => selfItem.id === item.id) === index);
 
     return { data: uniqueData, count: uniqueData.length };
   }

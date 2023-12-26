@@ -1,0 +1,11 @@
+<body>
+  <h1>Hello <%= name %></h1>
+
+  <p>Here are your upcoming matches:</p>
+
+  <ul>
+    <% matches.forEach(function(match) { %>
+    <li><%= match.host.name %> vs <%= match.guest.name %>, date: <%= match.date %>, <%= match.stadium?.name %></li>
+    <% }); %>
+  </ul>
+</body>
