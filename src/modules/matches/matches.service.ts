@@ -3,13 +3,12 @@ https://docs.nestjs.com/providers#services
 */
 
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { FirebaseStorageService } from "src/common/services/firebase/firebase-storage.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
-import { Match, Prisma } from "src/generated/prisma/client/mongo";
+import { Match } from "src/generated/prisma/client/mongo";
 import { CreateMatchDto } from "./dto/create-match.dto";
 import { MatchItem } from "./models/match-item.model";
-import { ObjectId } from "mongodb";
 
+const MAX_SIZE = 2;
 @Injectable()
 export class MatchesService {
   constructor(private mongoPrismaService: MongoPrismaService) {}
@@ -64,7 +63,8 @@ export class MatchesService {
     const favouriteMatches: Match[] = [];
     const today = new Date();
     for (const favTeam of favouriteTeams) {
-      const favMatch = await this.mongoPrismaService.match.findFirst({
+      const favMatches = await this.mongoPrismaService.match.findMany({
+        take: MAX_SIZE,
         where: { OR: [{ hostId: favTeam.teamId }, { guestId: favTeam.teamId }], date: { gte: today } },
         orderBy: { date: "asc" },
         include: {
@@ -88,12 +88,13 @@ export class MatchesService {
           },
         },
       });
-      if (favMatch) favouriteMatches.push(favMatch);
+      if (favMatches.length > 0) favouriteMatches.push(...favMatches);
     }
 
     for (const favStadium of favouriteStadiums) {
       const favMatch = await this.mongoPrismaService.match.findMany({
         where: { host: { stadium: { id: favStadium.stadiumId } }, date: { gte: today } },
+        take: MAX_SIZE,
         orderBy: { date: "asc" },
         include: {
           guest: {
@@ -117,7 +118,7 @@ export class MatchesService {
         },
       });
 
-      if (favMatch.length > 0) favouriteMatches.push(favMatch[0]);
+      if (favMatch.length > 0) favouriteMatches.push(...favMatch);
     }
 
     const uniqueData = favouriteMatches

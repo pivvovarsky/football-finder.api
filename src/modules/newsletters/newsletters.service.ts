@@ -48,9 +48,9 @@ export class NewslettersService {
 
     const favouriteMatches: MatchItemTeamStadiumDetails[] = [];
     const today = new Date();
-    const lastDayOfMonth = dayjs().endOf("month").toDate();
+    const lastDayOfMonth = dayjs().add(1, "M").endOf("month").toDate();
     for (const favTeam of favouriteTeams) {
-      const favMatch = await this.prismaService.match.findFirst({
+      const favMatches = await this.prismaService.match.findMany({
         where: {
           OR: [{ hostId: favTeam.teamId }, { guestId: favTeam.teamId }],
           date: { gte: today, lte: lastDayOfMonth },
@@ -76,7 +76,7 @@ export class NewslettersService {
           },
         },
       });
-      if (favMatch) favouriteMatches.push(favMatch);
+      if (favMatches.length > 0) favouriteMatches.push(...favMatches);
     }
 
     for (const favStadium of favouriteStadiums) {
@@ -105,7 +105,7 @@ export class NewslettersService {
         },
       });
 
-      if (favMatch.length > 0) favouriteMatches.push(favMatch[0]);
+      if (favMatch.length > 0) favouriteMatches.push(...favMatch);
     }
 
     const uniqueData = favouriteMatches
