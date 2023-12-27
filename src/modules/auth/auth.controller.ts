@@ -11,6 +11,7 @@ import { AuthPayload } from "./models/auth-payload.model";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { LoginDto } from "./dto/login.dto";
 import { UserModel } from "./models/auth.model";
+import { AuthLoginModel } from "./models/auth-login.model";
 
 @Public()
 @ApiTags("auth")
@@ -40,12 +41,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post("login")
   @ApiOperation({ summary: "Logging via api" })
-  async login(@Body() body: LoginDto) {
+  async login(@Body() body: LoginDto): Promise<AuthLoginModel> {
     return await this.authService.login(body);
   }
 
   @FirebaseJWTGuard()
   @Post("me/change-password")
+  @ApiOperation({ summary: "Change password" })
   async changePassword(@User() user: AuthPayload, @Body() body: ChangePasswordDto): Promise<void> {
     const data = { id: user.uid, newPassword: body.password };
     await this.authService.changePassword(data);

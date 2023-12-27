@@ -128,7 +128,6 @@ export class AuthService {
       } else {
         return {
           email: response.data.email,
-          name: response.data.displayName,
           emailVerified: firebaseUser.emailVerified,
           token: response.data.idToken,
         };
