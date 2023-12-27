@@ -17,6 +17,7 @@ export default (): IConfig => ({
     config: JSON.parse(process.env.FIREBASE_CONFIG),
     storageBucket: process.env.FIREBASE_BUCKET ?? "",
     key: process.env.FIREBASE_KEY ?? "",
+    loginUrl: "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
   },
   mailer: {
     transport: {

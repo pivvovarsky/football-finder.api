@@ -101,8 +101,8 @@ export class AuthService {
 
   public async login(body: { email: string; password: string }) {
     try {
-      const key = await this.apiConfigService.firebase.key;
-      const url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
+      const key = this.apiConfigService.firebase.key;
+      const url = this.apiConfigService.firebase.loginUrl;
 
       const response = await axios
         .post(

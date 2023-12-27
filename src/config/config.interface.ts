@@ -24,6 +24,7 @@ export interface IConfig {
     };
     storageBucket: string;
     key: string;
+    loginUrl: string;
   };
   mailer: {
     transport: {
