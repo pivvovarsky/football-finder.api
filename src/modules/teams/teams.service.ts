@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { FirebaseStorageService } from "src/common/services/firebase/firebase-storage.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { Prisma, Team } from "src/generated/prisma/client/mongo";
+import { TeamItem } from "./models/team-item.model";
 
 const SORT_BY: "asc" | "desc" = "asc";
 @Injectable()
@@ -47,7 +48,7 @@ export class TeamsService {
       orderBy: { name: SORT_BY },
     });
 
-    const allTeams: Team[] = [...favoriteTeamObjects, ...otherTeams];
+    const allTeams: TeamItem[] = [...favoriteTeamObjects, ...otherTeams];
 
     return { data: allTeams, count: allTeams.length };
   }

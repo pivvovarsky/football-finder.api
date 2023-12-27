@@ -17,18 +17,20 @@ import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorato
 export class MatchesController {
   constructor(private matchesService: MatchesService) {}
 
-  @ApiOperation({ summary: "protected by firbease-JWT - get all the matches" })
+  @ApiOperation({ summary: "Get all the matches" })
   @ListResponse(MatchItem)
   @Get()
   async getMany() {
     return await this.matchesService.getMany();
   }
 
+  @ApiOperation({ summary: "Create the match" })
   @Post()
   async create(@Body() body: CreateMatchDto): Promise<MatchItem> {
     return await this.matchesService.createOne(body);
   }
 
+  @ApiOperation({ summary: "Get favourite upcoming matches" })
   @FirebaseJWTGuard()
   @Get("upcoming")
   async getUpcommingMatches(@User() user: AuthPayload) {

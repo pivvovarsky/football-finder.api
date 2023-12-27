@@ -19,9 +19,6 @@ export class TeamItem implements TeamModel {
   updatedAt: Date;
 
   @ApiProperty()
-  stadium: StadiumItem | null;
-
-  @ApiProperty()
   league: string;
 
   @ApiProperty()

@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class StadiumImageModel {
+export class TeamImageModel {
   @ApiProperty()
   id: string;
 

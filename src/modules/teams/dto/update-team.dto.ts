@@ -1,7 +1,18 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 
 export class UpdateTeamDto {
   @IsString()
-  @IsNotEmpty()
-  name: string;
+  @IsOptional()
+  @MaxLength(50)
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(50)
+  league?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(50)
+  country?: string;
 }

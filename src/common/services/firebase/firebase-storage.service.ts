@@ -37,7 +37,7 @@ export class FirebaseStorageService {
       expires: "01-01-2025",
     });
 
-    return { teamId: id, imageUrl: imageUrl };
+    return { id: id, imageUrl: imageUrl };
   }
 
   public async deleteImage(id: string) {

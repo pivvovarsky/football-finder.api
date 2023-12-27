@@ -9,6 +9,9 @@ export class StadiumItem implements Stadium {
   imageUrl: string | null;
 
   @ApiProperty()
+  websiteUrl: string | null;
+
+  @ApiProperty()
   name: string;
 
   @ApiProperty()
@@ -28,7 +31,4 @@ export class StadiumItem implements Stadium {
 
   @ApiProperty()
   teamId: string;
-
-  @ApiProperty()
-  websiteUrl: string | null;
 }
