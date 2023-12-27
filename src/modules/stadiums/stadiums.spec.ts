@@ -3,6 +3,11 @@ import { Stadium, Team } from "src/generated/prisma/client/mongo";
 import { StadiumsController } from "./stadiums.controller";
 import { StadiumsService } from "./stadiums.service";
 import { UpdateStadiumDto } from "./dto/update-stadium.dto";
+import { FirebaseStorageService } from "src/common/services/firebase/firebase-storage.service";
+import { FirebaseService } from "src/common/services/firebase/firebase.service";
+import { ConfigService } from "@nestjs/config";
+import { IConfig } from "src/config/config.interface";
+import { ApiConfigService } from "src/common/services/api-config.service";
 jest.mock("@nestjs/config");
 jest.mock("src/common/services/mongo-prisma.service.ts");
 
@@ -14,16 +19,16 @@ describe("StadiumsController", () => {
 
   beforeEach(async () => {
     const mongoPrismaService = new MongoPrismaService();
-
-    stadiumsService = new StadiumsService(mongoPrismaService);
+    const firebaseStorage = {} as FirebaseStorageService;
+    stadiumsService = new StadiumsService(mongoPrismaService, firebaseStorage);
     stadiumsController = new StadiumsController(stadiumsService);
   });
 
   describe("getMany", () => {
     it("should return an array of stadiums", async () => {
       const mockTeams: Team[] = [
-        { id: "123", imageUrl: "", createdAt: NOW, updatedAt: NOW, name: "Team 1", description: "Description 1" },
-        { id: "321", imageUrl: "", createdAt: NOW, updatedAt: NOW, name: "Team 2", description: "Description 2" },
+        { id: "123", imageUrl: "", createdAt: NOW, updatedAt: NOW, name: "Team 1", country: "PL", league: "PL" },
+        { id: "321", imageUrl: "", createdAt: NOW, updatedAt: NOW, name: "Team 2", country: "PL", league: "PL" },
       ];
 
       const mockStadiums: Stadium[] = [
@@ -36,6 +41,8 @@ describe("StadiumsController", () => {
           createdAt: NOW,
           updatedAt: NOW,
           teamId: mockTeams[0].id,
+          imageUrl: "http/image",
+          websiteUrl: "http/image",
         },
         {
           id: "2",
@@ -46,14 +53,16 @@ describe("StadiumsController", () => {
           createdAt: NOW,
           updatedAt: NOW,
           teamId: mockTeams[1].id,
+          imageUrl: "http/image",
+          websiteUrl: "http/image",
         },
       ];
 
-      jest.spyOn(stadiumsService, "getMany").mockResolvedValue(mockStadiums);
+      jest.spyOn(stadiumsService, "getMany").mockResolvedValue({ data: mockStadiums, count: mockStadiums.length });
 
       const result = await stadiumsController.getMany();
 
-      expect(result).toBe(mockStadiums);
+      expect(result).toStrictEqual({ data: mockStadiums, count: mockStadiums.length });
     });
   });
 
@@ -65,7 +74,8 @@ describe("StadiumsController", () => {
         createdAt: NOW,
         updatedAt: NOW,
         name: "Team 1",
-        description: "Description 1",
+        country: "PL",
+        league: "PL",
       };
       const mockStadium: Stadium = {
         id: "1",
@@ -76,6 +86,8 @@ describe("StadiumsController", () => {
         createdAt: NOW,
         updatedAt: NOW,
         teamId: mockTeam.id,
+        imageUrl: null,
+        websiteUrl: null,
       };
 
       const paramIdStadium = "1";
@@ -107,6 +119,8 @@ describe("StadiumsController", () => {
         teamId: "123",
         latitude: 3333.3,
         longitude: 444.4,
+        imageUrl: null,
+        websiteUrl: null,
       };
 
       jest.spyOn(stadiumsService, "updateOne").mockResolvedValue(updatedStadium);

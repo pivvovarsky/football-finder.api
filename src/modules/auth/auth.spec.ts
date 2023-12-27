@@ -9,6 +9,7 @@ import { MailerService, MailerTransportFactory } from "@nestjs-modules/mailer";
 import { TransportType } from "@nestjs-modules/mailer/dist/interfaces/mailer-options.interface";
 import * as nodemailerMock from "nodemailer-mock";
 import { FirebaseAuthService } from "src/common/services/firebase/firebase-auth.service";
+import { Logger } from "@nestjs/common";
 jest.mock("@nestjs/config");
 jest.mock("src/common/services/mongo-prisma.service.ts");
 jest.mock("src/common/services/api-config.service.ts");
@@ -34,8 +35,9 @@ describe("AuthController", () => {
     const firebaseAuthService = new FirebaseAuthService(firebaseService);
     const prismaService = new MongoPrismaService();
     const mailerService = new MailerService(apiConfigService.mailer, new TestTransportFactory());
+    const logger = new Logger();
 
-    authService = new AuthService(prismaService, firebaseAuthService, mailerService, apiConfigService);
+    authService = new AuthService(prismaService, firebaseAuthService, mailerService, apiConfigService, logger);
 
     authController = new AuthController(authService);
   });

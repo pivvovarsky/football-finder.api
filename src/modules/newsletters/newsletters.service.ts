@@ -48,7 +48,7 @@ export class NewslettersService {
 
     const favouriteMatches: MatchItemTeamStadiumDetails[] = [];
     const today = new Date();
-    const lastDayOfMonth = dayjs().add(1, "M").endOf("month").toDate();
+    const lastDayOfMonth = dayjs().endOf("month").toDate();
     for (const favTeam of favouriteTeams) {
       const favMatches = await this.prismaService.match.findMany({
         where: {
