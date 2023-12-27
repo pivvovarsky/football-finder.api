@@ -82,6 +82,8 @@ export class TeamsService {
 
   public async getUrlImage(id: string) {
     this.isValidID(id);
+    const team = await this.mongoPrismaService.team.findFirst({ where: { id, imageUrl: { not: null } } });
+    if (!team) throw new NotFoundException("Image url not found");
     const firebaseImageUrl = await this.firebaseStorageService.getImageUrl(id);
     return firebaseImageUrl;
   }

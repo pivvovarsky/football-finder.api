@@ -8,8 +8,8 @@ import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorato
 import { TeamItem } from "./models/team-item.model";
 import { User } from "src/common/decorators/user.decorator";
 import { AuthPayload } from "../auth/models/auth-payload.model";
+import { ApiKeyGuard } from "src/common/decorators/guards/api-key.decorator";
 
-// @FirebaseJWTGuard()
 @ApiTags("teams")
 @Controller("teams")
 export class TeamsController {
@@ -32,12 +32,6 @@ export class TeamsController {
   @Put(":id")
   async update(@Param("id") id: string, @Body() body: UpdateTeamDto): Promise<Team> {
     return await this.teamsService.updateOne(id, body);
-  }
-
-  @ApiOperation({ summary: "delete team" })
-  @Delete(":id")
-  async delete(@Param("id") id: string): Promise<void> {
-    await this.teamsService.deleteOne(id);
   }
 
   @ApiOperation({ summary: "upload an image for the team" })
@@ -63,5 +57,12 @@ export class TeamsController {
   @Get(":id/imageUrl")
   async getUrlImage(@Param("id") id: string) {
     return await this.teamsService.getUrlImage(id);
+  }
+
+  @ApiKeyGuard()
+  @ApiOperation({ summary: "Detele the team" })
+  @Delete(":id")
+  async delete(@Param("id") id: string): Promise<void> {
+    await this.teamsService.deleteOne(id);
   }
 }

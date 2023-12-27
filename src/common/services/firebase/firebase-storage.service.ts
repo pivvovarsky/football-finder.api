@@ -28,6 +28,7 @@ export class FirebaseStorageService {
 
   public async getImageUrl(id: string) {
     const storageRef = this.storage.bucket().file(`teams/images/${id}`);
+
     if (!storageRef) {
       throw new NotFoundException();
     }

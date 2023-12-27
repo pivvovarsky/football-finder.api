@@ -17,8 +17,8 @@ export class StadiumsService {
   }
 
   public async getMany() {
-    const data = await this.mongoPrismaService.stadium.findMany();
-    const count = await this.mongoPrismaService.stadium.count();
+    const data = await this.mongoPrismaService.stadium.findMany({ where: { imageUrl: { not: null } } });
+    const count = await this.mongoPrismaService.stadium.count({ where: { imageUrl: { not: null } } });
     return { data, count };
   }
 
@@ -52,6 +52,8 @@ export class StadiumsService {
 
   public async getUrlImage(id: string) {
     this.isValidID(id);
+    const stadium = await this.mongoPrismaService.stadium.findFirst({ where: { id, imageUrl: { not: null } } });
+    if (!stadium) throw new NotFoundException("Image url not found");
     const firebaseImageUrl = await this.firebaseStorageService.getImageUrl(id);
     return firebaseImageUrl;
   }

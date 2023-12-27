@@ -56,9 +56,9 @@ model Stadium {
 
 model Match {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  host    Team     @relation("MatchHost", fields: [hostId], references: [id])
+  host    Team     @relation("MatchHost", fields: [hostId], references: [id], onDelete: Cascade)
   hostId  String   @db.ObjectId
-  guest   Team     @relation("MatchGuest", fields: [guestId], references: [id])
+  guest   Team     @relation("MatchGuest", fields: [guestId], references: [id], onDelete: Cascade)
   guestId String   @db.ObjectId
   date    DateTime
 
@@ -70,7 +70,7 @@ model Rating {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  stadium   Stadium @relation(fields: [stadiumId], references: [id])
+  stadium   Stadium @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
   stadiumId String  @db.ObjectId
   rating    Int
 
@@ -82,7 +82,7 @@ model FavoriteStadium {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  stadium   Stadium @relation(fields: [stadiumId], references: [id])
+  stadium   Stadium @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
   stadiumId String  @db.ObjectId
 
   createdAt DateTime @default(now())
@@ -93,7 +93,7 @@ model FavoriteTeam {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  team   Team   @relation(fields: [teamId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId String @db.ObjectId
 
   createdAt DateTime @default(now())

@@ -16,14 +16,17 @@ export class CreateStadiumDto {
   description: string | null;
 
   @IsString()
+  @MaxLength(50)
   teamName: string;
 
   @IsString()
   websiteUrl: string | null;
 
   @IsString()
+  @MaxLength(50)
   country: string;
 
   @IsString()
+  @MaxLength(50)
   league: string;
 }
