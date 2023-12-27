@@ -10,6 +10,7 @@ import { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import { AuthPayload } from "./models/auth-payload.model";
 import { ChangePasswordDto } from "./dto/change-password.dto";
 import { LoginDto } from "./dto/login.dto";
+import { UserModel } from "./models/auth.model";
 
 @Public()
 @ApiTags("auth")
@@ -20,7 +21,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post("register")
   @ApiOperation({ summary: "Create an account" })
-  async signUp(@Body() body: RegisterDto) {
+  async signUp(@Body() body: RegisterDto): Promise<UserModel> {
     const user = await this.authService.signUp(body);
 
     if (!!user) {
