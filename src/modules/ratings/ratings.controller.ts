@@ -2,8 +2,8 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Body, Controller, Get, Param, Put } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Get, Param, Patch, Put } from "@nestjs/common";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { RatingsService } from "./ratings.service";
 import { UpsertRatingDto } from "./dto/upsert-rating.dto";
 import { User } from "src/common/decorators/user.decorator";
@@ -17,12 +17,14 @@ import { RatingItem } from "./models/upsert-rating.model";
 @Controller("ratings")
 export class RatingsController {
   constructor(private ratingsService: RatingsService) {}
+  @ApiOperation({ summary: "Get a stadium rating from user" })
   @Get("me/:stadiumId")
   async getMyRating(@User() user: AuthPayload, @Param("stadiumId") stadiumId: string): Promise<RatingItem | null> {
     return await this.ratingsService.getMyRating(user.uid, stadiumId);
   }
 
-  @Put("me/:stadiumId")
+  @ApiOperation({ summary: "Create or update a user rating about the stadium." })
+  @Patch("me/:stadiumId")
   async upsertRating(
     @User() user: AuthPayload,
     @Param("stadiumId") stadiumId: string,
@@ -31,6 +33,7 @@ export class RatingsController {
     return await this.ratingsService.upsertStadiumRating(user.uid, stadiumId, body.rating);
   }
 
+  @ApiOperation({ summary: "Get average ratings from users about the stadium" })
   @Get(":stadiumId/average")
   async averageRatingStadium(@Param("stadiumId") stadiumId: string): Promise<AvgRatingStadium> {
     return await this.ratingsService.getAvgRatingStadium(stadiumId);

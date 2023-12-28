@@ -12,6 +12,7 @@ import { AuthPayload } from "../auth/models/auth-payload.model";
 import { User } from "src/common/decorators/user.decorator";
 import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorator";
 import { UpcomingMatchItem } from "./models/upcoming-match-item.model";
+import { ApiKeyGuard } from "src/common/decorators/guards/api-key.decorator";
 
 @ApiTags("matches")
 @Controller("matches")
@@ -19,6 +20,7 @@ export class MatchesController {
   constructor(private matchesService: MatchesService) {}
 
   @ApiOperation({ summary: "Get all the matches" })
+  @ApiKeyGuard()
   @ListResponse(MatchItem)
   @Get()
   async getMany() {
@@ -26,6 +28,7 @@ export class MatchesController {
   }
 
   @ApiOperation({ summary: "Create the match" })
+  @ApiKeyGuard()
   @Post()
   async create(@Body() body: CreateMatchDto): Promise<MatchItem> {
     return await this.matchesService.createOne(body);

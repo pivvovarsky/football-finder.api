@@ -4,12 +4,14 @@ https://docs.nestjs.com/providers#services
 
 import { BadRequestException, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
-import { GetSubscribeNewsletterModel } from "./models/get-subscribe-newsletter.model";
-import { Match, Prisma, User } from "src/generated/prisma/client/mongo";
+import { Match, User } from "src/generated/prisma/client/mongo";
 import * as dayjs from "dayjs";
 import { MailerService } from "@nestjs-modules/mailer";
-import { MatchItemTeamStadiumDetails } from "../matches/models/match-team-stadium-details.model";
 import { Cron } from "@nestjs/schedule";
+import { SubscribeNewsletterModel } from "./models/subscribe-newsletter.model";
+import { MatchItemWithTeamDetails } from "../matches/models/match-item.model";
+import { UpcomingMatchItem } from "../matches/models/upcoming-match-item.model";
+import { MatchDetailsNewsletterModel } from "./models/match-details-newsletter.model";
 
 @Injectable()
 export class NewslettersService {
@@ -23,15 +25,10 @@ export class NewslettersService {
     const user = await this.prismaService.user.findUnique({ where: { id: userUid } });
     if (!user) throw new NotFoundException("User not found");
 
-    const userData: Omit<User, "id" | "newsletterSubscribed"> = {
-      email: user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    };
-    await this.prismaService.user.update({ where: { id: userUid }, data: { ...userData, newsletterSubscribed } });
+    await this.prismaService.user.update({ where: { id: userUid }, data: { newsletterSubscribed } });
   }
 
-  public async getMySubscription(userUid: string): Promise<GetSubscribeNewsletterModel> {
+  public async getMySubscription(userUid: string): Promise<SubscribeNewsletterModel> {
     const user = await this.prismaService.user.findUnique({ where: { id: userUid } });
     if (!user) throw new NotFoundException("User not found");
 
@@ -46,7 +43,7 @@ export class NewslettersService {
       this.prismaService.favoriteStadium.findMany({ where: { userId: userUid } }),
     ]);
 
-    const favouriteMatches: MatchItemTeamStadiumDetails[] = [];
+    const favouriteMatches: MatchDetailsNewsletterModel[] = [];
     const today = new Date();
     const lastDayOfMonth = dayjs().endOf("month").toDate();
     for (const favTeam of favouriteTeams) {
@@ -58,33 +55,23 @@ export class NewslettersService {
         include: {
           guest: {
             select: {
-              id: true,
               name: true,
               imageUrl: true,
-              createdAt: true,
-              updatedAt: true,
-              league: true,
-              country: true,
-              stadium: true,
             },
           },
           host: {
             select: {
-              id: true,
               name: true,
               imageUrl: true,
-              createdAt: true,
-              updatedAt: true,
               league: true,
               country: true,
-              stadium: true,
+              stadium: { select: { name: true } },
             },
           },
         },
       });
       if (favMatches.length > 0) favouriteMatches.push(...favMatches);
     }
-
     for (const favStadium of favouriteStadiums) {
       const favMatch = await this.prismaService.match.findMany({
         where: { host: { stadium: { id: favStadium.stadiumId } }, date: { gte: today } },
@@ -92,26 +79,17 @@ export class NewslettersService {
         include: {
           guest: {
             select: {
-              id: true,
               name: true,
               imageUrl: true,
-              createdAt: true,
-              updatedAt: true,
-              league: true,
-              country: true,
-              stadium: true,
             },
           },
           host: {
             select: {
-              id: true,
               name: true,
               imageUrl: true,
-              createdAt: true,
-              updatedAt: true,
               league: true,
               country: true,
-              stadium: true,
+              stadium: { select: { name: true } },
             },
           },
         },
@@ -146,7 +124,7 @@ export class NewslettersService {
           host: { name: match.host.name },
           guest: { name: match.guest.name },
           date: dayjs(match.date).format("DD/MM/YYYY, HH:mm").toString(),
-          stadium: { name: match.host.stadium?.name },
+          stadium: { name: match.host.stadium?.name || `${match.host.name} stadium` },
         }));
 
         await this.mailerService

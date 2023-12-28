@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsOptional } from "class-validator";
 import { Stadium } from "src/generated/prisma/client/mongo";
 
 export class StadiumItem implements Stadium {
@@ -32,8 +33,10 @@ export class StadiumItem implements Stadium {
   @ApiProperty()
   teamId: string;
 }
-
-export class StadiumName {
+export class StadiumNameAndWebsiteUrlModel {
   @ApiProperty()
   name: string;
+
+  @ApiProperty()
+  websiteUrl: string | null;
 }

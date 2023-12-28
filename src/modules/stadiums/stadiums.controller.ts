@@ -11,12 +11,14 @@ import { FirebaseJWTGuard } from "src/common/decorators/guards/firebase.decorato
 import { ApiKeyGuard } from "src/common/decorators/guards/api-key.decorator";
 import { StadiumImageModel } from "./models/stadium-image.model";
 import { NextMatchModel } from "./models/stadium-next-match.model";
+import { Public } from "src/common/decorators/public.decorator";
 
 @ApiTags("stadiums")
 @Controller("stadiums")
 export class StadiumsController {
   constructor(private stadiumsService: StadiumsService) {}
 
+  @Public()
   @ApiOperation({ summary: "Get all the stadiums" })
   @ListResponse(StadiumItem)
   @Get()

@@ -7,6 +7,7 @@ import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { Match } from "src/generated/prisma/client/mongo";
 import { CreateMatchDto } from "./dto/create-match.dto";
 import { MatchItem } from "./models/match-item.model";
+import { UpcomingMatchItem } from "./models/upcoming-match-item.model";
 
 const MAX_SIZE = 2;
 @Injectable()
@@ -39,7 +40,7 @@ export class MatchesService {
       this.mongoPrismaService.favoriteStadium.findMany({ where: { userId: userUid } }),
     ]);
 
-    const favouriteMatches: Match[] = [];
+    const favouriteMatches: UpcomingMatchItem[] = [];
     const today = new Date();
     for (const favTeam of favouriteTeams) {
       const favMatches = await this.mongoPrismaService.match.findMany({
@@ -59,7 +60,7 @@ export class MatchesService {
               imageUrl: true,
               league: true,
               country: true,
-              stadium: { select: { name: true } },
+              stadium: { select: { name: true, websiteUrl: true } },
             },
           },
         },
@@ -85,7 +86,7 @@ export class MatchesService {
               imageUrl: true,
               league: true,
               country: true,
-              stadium: true,
+              stadium: { select: { name: true, websiteUrl: true } },
             },
           },
         },

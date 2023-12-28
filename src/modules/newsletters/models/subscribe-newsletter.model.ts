@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsBoolean } from "class-validator";
 
-export class GetSubscribeNewsletterModel {
+export class SubscribeNewsletterModel {
   @ApiProperty()
   newsletterSubscribed: boolean;
 }
