@@ -21,7 +21,10 @@ export default (): IConfig => ({
   },
   mailer: {
     transport: {
-      host: "smtp.ethereal.email",
+      // host: "smtp.ethereal.email",
+
+      service: "gmail",
+      host: "smtp.gmail.com",
       port: 587,
       auth: {
         user: process.env.MAILER_USER ?? "",

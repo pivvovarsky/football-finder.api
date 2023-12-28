@@ -36,7 +36,7 @@ import { ScheduleModule as CronModule } from "@nestjs/schedule";
         transport: configService.mailer.transport,
         defaults: configService.mailer.defaults,
         template: {
-          dir: join(__dirname, "../../templates"),
+          dir: join(__dirname, "templates"),
           adapter: new EjsAdapter(),
           options: {
             strict: false,

@@ -87,7 +87,7 @@ export class AuthService {
           },
         })
         .then(() => {
-          this.logger.log("mail sent", firebaseUser.email);
+          this.logger.debug("mail sent", firebaseUser.email);
         })
         .catch((error) => {
           this.logger.error("error", error, firebaseUser.email);

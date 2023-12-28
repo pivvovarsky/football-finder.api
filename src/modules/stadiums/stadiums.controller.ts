@@ -17,7 +17,6 @@ import { NextMatchModel } from "./models/stadium-next-match.model";
 export class StadiumsController {
   constructor(private stadiumsService: StadiumsService) {}
 
-  @FirebaseJWTGuard()
   @ApiOperation({ summary: "Get all the stadiums" })
   @ListResponse(StadiumItem)
   @Get()
