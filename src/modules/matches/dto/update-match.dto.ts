@@ -1,4 +1,4 @@
-import { IsDateString, IsIn, IsInt, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsOptional, IsString } from "class-validator";
 
 export class UpdateStadiumDto {
   @IsString()
@@ -10,10 +10,4 @@ export class UpdateStadiumDto {
   @IsDateString()
   @IsOptional()
   date?: Date;
-
-  @IsInt()
-  hostGoals: number;
-
-  @IsInt()
-  guestGoals: number;
 }

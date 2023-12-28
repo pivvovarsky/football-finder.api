@@ -32,3 +32,8 @@ export class StadiumItem implements Stadium {
   @ApiProperty()
   teamId: string;
 }
+
+export class StadiumName {
+  @ApiProperty()
+  name: string;
+}

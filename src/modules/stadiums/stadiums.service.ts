@@ -68,7 +68,7 @@ export class StadiumsService {
     const matches = await this.mongoPrismaService.match.findMany({
       where: { host: { stadium: { id: stadiumId } }, date: { gte: today } },
       orderBy: { date: "asc" },
-      include: { host: true, guest: true },
+      include: { host: { select: { name: true } }, guest: { select: { name: true } } },
     });
 
     return { ...matches[0] };

@@ -1,24 +1,11 @@
-import { Logger, NotFoundException } from "@nestjs/common";
-import * as dayjs from "dayjs";
+import { Logger } from "@nestjs/common";
 import { DeleteUsersResult } from "firebase-admin/lib/auth/base-auth";
 import { Command, CommandRunner } from "nest-commander";
 import { FirebaseService } from "src/common/services/firebase/firebase.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { Prisma } from "src/generated/prisma/client/mongo";
-// command to run script:  npm run generate-fake-data
-interface Team {
-  name: string;
-  description?: string;
-}
+// command to run script:  npm run delete-users
 
-interface Stadium {
-  name: string;
-  latitude: number;
-  longitude: number;
-}
-
-const DATA_QUANTITY = 2;
-const TODAY = dayjs().toDate();
 @Command({ name: "delete-users", description: "Delete users from MongoDB and Firebase" })
 export class DeleteUsers extends CommandRunner {
   constructor(

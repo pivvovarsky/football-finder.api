@@ -58,8 +58,11 @@ export class NewslettersService {
         include: {
           guest: {
             select: {
+              id: true,
               name: true,
               imageUrl: true,
+              createdAt: true,
+              updatedAt: true,
               league: true,
               country: true,
               stadium: true,
@@ -67,8 +70,11 @@ export class NewslettersService {
           },
           host: {
             select: {
+              id: true,
               name: true,
               imageUrl: true,
+              createdAt: true,
+              updatedAt: true,
               league: true,
               country: true,
               stadium: true,
@@ -86,8 +92,11 @@ export class NewslettersService {
         include: {
           guest: {
             select: {
+              id: true,
               name: true,
               imageUrl: true,
+              createdAt: true,
+              updatedAt: true,
               league: true,
               country: true,
               stadium: true,
@@ -95,8 +104,11 @@ export class NewslettersService {
           },
           host: {
             select: {
+              id: true,
               name: true,
               imageUrl: true,
+              createdAt: true,
+              updatedAt: true,
               league: true,
               country: true,
               stadium: true,

@@ -26,28 +26,7 @@ export class MatchesService {
   }
 
   public async getMany() {
-    const data = await this.mongoPrismaService.match.findMany({
-      include: {
-        guest: {
-          select: {
-            name: true,
-            imageUrl: true,
-            league: true,
-            country: true,
-            stadium: { select: { name: true, websiteUrl: true } },
-          },
-        },
-        host: {
-          select: {
-            name: true,
-            imageUrl: true,
-            league: true,
-            country: true,
-            stadium: { select: { name: true, websiteUrl: true } },
-          },
-        },
-      },
-    });
+    const data = await this.mongoPrismaService.match.findMany({});
     const count = await this.mongoPrismaService.match.count();
     return { data, count };
   }
@@ -72,9 +51,6 @@ export class MatchesService {
             select: {
               name: true,
               imageUrl: true,
-              league: true,
-              country: true,
-              stadium: true,
             },
           },
           host: {
@@ -83,7 +59,7 @@ export class MatchesService {
               imageUrl: true,
               league: true,
               country: true,
-              stadium: true,
+              stadium: { select: { name: true } },
             },
           },
         },
@@ -101,9 +77,6 @@ export class MatchesService {
             select: {
               name: true,
               imageUrl: true,
-              league: true,
-              country: true,
-              stadium: true,
             },
           },
           host: {

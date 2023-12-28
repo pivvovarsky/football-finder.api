@@ -1,51 +1,13 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Match } from "src/generated/prisma/client/mongo";
+import { ApiProperty, PickType } from "@nestjs/swagger";
+import { TeamItem } from "src/modules/teams/models/team-item.model";
+import { MatchItem } from "src/modules/matches/models/match-item.model";
 
-class TeamDetails {
-  @ApiProperty()
-  id: string;
+class NextMatchTeamModel extends PickType(TeamItem, ["name"] as const) {}
 
+export class NextMatchModel extends MatchItem {
   @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  imageUrl: string | null;
+  host: NextMatchTeamModel;
 
   @ApiProperty()
-  league: string;
-
-  @ApiProperty()
-  country: string;
-
-  @ApiProperty()
-  createdAt: Date;
-
-  @ApiProperty()
-  updatedAt: Date;
-}
-
-export class NextMatchModel implements Match {
-  @ApiProperty()
-  id: string;
-
-  @ApiProperty()
-  hostId: string;
-
-  @ApiProperty()
-  guestId: string;
-
-  @ApiProperty()
-  date: Date;
-
-  @ApiProperty()
-  createdAt: Date;
-
-  @ApiProperty()
-  updatedAt: Date;
-
-  @ApiProperty()
-  host: TeamDetails;
-
-  @ApiProperty()
-  guest: TeamDetails;
+  guest: NextMatchTeamModel;
 }
