@@ -74,7 +74,7 @@ export class NewslettersService {
     }
     for (const favStadium of favouriteStadiums) {
       const favMatch = await this.prismaService.match.findMany({
-        where: { host: { stadium: { id: favStadium.stadiumId } }, date: { gte: today } },
+        where: { host: { stadium: { id: favStadium.stadiumId } }, date: { gte: today, lte: lastDayOfMonth } },
         orderBy: { date: "asc" },
         include: {
           guest: {
