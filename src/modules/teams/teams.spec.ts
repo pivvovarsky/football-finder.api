@@ -1,7 +1,7 @@
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { TeamsController } from "./teams.controller";
 import { TeamsService } from "./teams.service";
-import { Stadium, Team } from "src/generated/prisma/client/mongo";
+import { Team } from "src/generated/prisma/client/mongo";
 import { FirebaseStorageService } from "src/common/services/firebase/firebase-storage.service";
 import { FirebaseService } from "src/common/services/firebase/firebase.service";
 import { ApiConfigService } from "src/common/services/api-config.service";
@@ -9,6 +9,7 @@ import { ConfigService } from "@nestjs/config";
 import { IConfig } from "src/config/config.interface";
 import { TeamItem } from "./models/team-item.model";
 import { AuthPayload } from "../auth/models/auth-payload.model";
+import { StadiumItem } from "../stadiums/models/stadium-item.model";
 jest.mock("@nestjs/config");
 jest.mock("src/common/services/mongo-prisma.service.ts");
 jest.mock("src/common/services/api-config.service.ts");
@@ -34,7 +35,7 @@ describe("TeamsController", () => {
 
   describe("getMany", () => {
     it("should return an array of teams", async () => {
-      const mockTeams: TeamItem[] = [
+      const mockTeams = [
         {
           id: "123",
           imageUrl: "",
@@ -43,7 +44,18 @@ describe("TeamsController", () => {
           name: "Team 1",
           country: "PL",
           league: "PL",
-          stadium: null,
+          stadium: {
+            id: "",
+            imageUrl: null,
+            websiteUrl: null,
+            name: "",
+            latitude: 0,
+            longitude: 0,
+            description: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            teamId: "",
+          },
         },
         {
           id: "321",
@@ -53,7 +65,18 @@ describe("TeamsController", () => {
           name: "Team 2",
           country: "PL",
           league: "PL",
-          stadium: null,
+          stadium: {
+            id: "",
+            imageUrl: null,
+            websiteUrl: null,
+            name: "",
+            latitude: 0,
+            longitude: 0,
+            description: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            teamId: "",
+          },
         },
       ];
 
@@ -72,7 +95,7 @@ describe("TeamsController", () => {
 
   describe("getOne", () => {
     it("should return a team with the specified id", async () => {
-      const mockTeam: TeamItem = {
+      const mockTeam = {
         id: "123",
         imageUrl: "",
         createdAt: NOW,
@@ -80,8 +103,20 @@ describe("TeamsController", () => {
         name: "Team 1",
         country: "PL",
         league: "PL",
-        stadium: null,
+        stadium: {
+          id: "",
+          imageUrl: null,
+          websiteUrl: null,
+          name: "",
+          latitude: 0,
+          longitude: 0,
+          description: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          teamId: "123",
+        },
       };
+
       const id = "123";
 
       jest.spyOn(teamsService, "getOne").mockResolvedValue(mockTeam);
