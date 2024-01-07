@@ -43,22 +43,18 @@ export class NewslettersService {
       this.prismaService.favoriteStadium.findMany({ where: { userId: userUid } }),
     ]);
 
-    const favouriteMatches: MatchDetailsNewsletterModel[] = [];
     const today = new Date();
     const lastDayOfMonth = dayjs().endOf("month").toDate();
-    for (const favTeam of favouriteTeams) {
-      const favMatches = await this.prismaService.match.findMany({
+
+    const favTeamMatchesPromises = favouriteTeams.map((favTeam) =>
+      this.prismaService.match.findMany({
         where: {
           OR: [{ hostId: favTeam.teamId }, { guestId: favTeam.teamId }],
           date: { gte: today, lte: lastDayOfMonth },
         },
+        orderBy: { date: "asc" },
         include: {
-          guest: {
-            select: {
-              name: true,
-              imageUrl: true,
-            },
-          },
+          guest: { select: { name: true, imageUrl: true } },
           host: {
             select: {
               name: true,
@@ -69,20 +65,15 @@ export class NewslettersService {
             },
           },
         },
-      });
-      if (favMatches.length > 0) favouriteMatches.push(...favMatches);
-    }
-    for (const favStadium of favouriteStadiums) {
-      const favMatch = await this.prismaService.match.findMany({
+      }),
+    );
+
+    const favStadiumMatchesPromises = favouriteStadiums.map((favStadium) =>
+      this.prismaService.match.findMany({
         where: { host: { stadium: { id: favStadium.stadiumId } }, date: { gte: today, lte: lastDayOfMonth } },
         orderBy: { date: "asc" },
         include: {
-          guest: {
-            select: {
-              name: true,
-              imageUrl: true,
-            },
-          },
+          guest: { select: { name: true, imageUrl: true } },
           host: {
             select: {
               name: true,
@@ -93,10 +84,13 @@ export class NewslettersService {
             },
           },
         },
-      });
+      }),
+    );
 
-      if (favMatch.length > 0) favouriteMatches.push(...favMatch);
-    }
+    const allMatchesPromises = [...favTeamMatchesPromises, ...favStadiumMatchesPromises];
+    const allMatchesResults = await Promise.all(allMatchesPromises);
+
+    const favouriteMatches: MatchDetailsNewsletterModel[] = allMatchesResults.flat();
 
     const uniqueData = favouriteMatches
       .sort((a, b) => a.date.getTime() - b.date.getTime())
@@ -117,33 +111,34 @@ export class NewslettersService {
       include: { favoriteTeams: true, favoriteStadiums: true },
     });
     const monthFullName = new Intl.DateTimeFormat("en-US", { month: "long" }).format(new Date());
-    for (const user of usersWithNewsletterSubscribed) {
-      if (user.newsletterSubscribed) {
-        const upcomingMatches = await this.getFavouriteMatchesThisMonth(user.id);
-        const formattedMatches = upcomingMatches.data.map((match) => ({
-          host: { name: match.host.name },
-          guest: { name: match.guest.name },
-          date: dayjs(match.date).format("DD/MM/YYYY, HH:mm").toString(),
-          stadium: { name: match.host.stadium?.name || `${match.host.name} stadium` },
-        }));
 
-        await this.mailerService
-          .sendMail({
-            to: user.email,
-            subject: `Football Finder - Monthly newsletter - ${monthFullName}`,
-            template: "newsletter",
-            context: {
-              name: user.email,
-              matches: formattedMatches,
-            },
-          })
-          .then(() => {
-            this.logger.debug("mail sent", user.email);
-          })
-          .catch((error) => {
-            this.logger.error("error", error);
-          });
-      }
-    }
+    const mailPromises = usersWithNewsletterSubscribed.map(async (user) => {
+      const upcomingMatches = await this.getFavouriteMatchesThisMonth(user.id);
+      const formattedMatches = upcomingMatches.data.map((match) => ({
+        host: { name: match.host.name },
+        guest: { name: match.guest.name },
+        date: dayjs(match.date).format("DD/MM/YYYY, HH:mm").toString(),
+        stadium: { name: match.host.stadium?.name || `${match.host.name} stadium` },
+      }));
+
+      return this.mailerService
+        .sendMail({
+          to: user.email,
+          subject: `Football Finder - Monthly newsletter - ${monthFullName}`,
+          template: "newsletter",
+          context: {
+            name: user.email,
+            matches: formattedMatches,
+          },
+        })
+        .then(() => {
+          this.logger.debug("mail sent", user.email);
+        })
+        .catch((error) => {
+          this.logger.error("error", error);
+        });
+    });
+
+    await Promise.all(mailPromises);
   }
 }

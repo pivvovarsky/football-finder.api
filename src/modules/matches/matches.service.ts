@@ -39,60 +39,35 @@ export class MatchesService {
       this.mongoPrismaService.favoriteStadium.findMany({ where: { userId: userUid } }),
     ]);
 
-    const favouriteMatches: UpcomingMatchItem[] = [];
     const today = new Date();
-    for (const favTeam of favouriteTeams) {
-      const favMatches = await this.mongoPrismaService.match.findMany({
+
+    const matchesPromises = favouriteTeams.map((favTeam) =>
+      this.mongoPrismaService.match.findMany({
         take: MAX_SIZE,
         where: { OR: [{ hostId: favTeam.teamId }, { guestId: favTeam.teamId }], date: { gte: today } },
         orderBy: { date: "asc" },
         include: {
-          guest: {
-            select: {
-              name: true,
-              imageUrl: true,
-            },
-          },
-          host: {
-            select: {
-              name: true,
-              imageUrl: true,
-              league: true,
-              country: true,
-              stadium: true,
-            },
-          },
+          guest: { select: { name: true, imageUrl: true } },
+          host: { select: { name: true, imageUrl: true, league: true, country: true, stadium: true } },
         },
-      });
-      if (favMatches.length > 0) favouriteMatches.push(...favMatches);
-    }
+      }),
+    );
 
-    for (const favStadium of favouriteStadiums) {
-      const favMatch = await this.mongoPrismaService.match.findMany({
+    const stadiumMatchesPromises = favouriteStadiums.map((favStadium) =>
+      this.mongoPrismaService.match.findMany({
         where: { host: { stadium: { id: favStadium.stadiumId } }, date: { gte: today } },
         take: MAX_SIZE,
         orderBy: { date: "asc" },
         include: {
-          guest: {
-            select: {
-              name: true,
-              imageUrl: true,
-            },
-          },
-          host: {
-            select: {
-              name: true,
-              imageUrl: true,
-              league: true,
-              country: true,
-              stadium: true,
-            },
-          },
+          guest: { select: { name: true, imageUrl: true } },
+          host: { select: { name: true, imageUrl: true, league: true, country: true, stadium: true } },
         },
-      });
+      }),
+    );
 
-      if (favMatch.length > 0) favouriteMatches.push(...favMatch);
-    }
+    const allMatches = await Promise.all([...matchesPromises, ...stadiumMatchesPromises]);
+
+    const favouriteMatches = allMatches.flat();
 
     const uniqueData = favouriteMatches
       .sort((a, b) => a.date.getTime() - b.date.getTime())
