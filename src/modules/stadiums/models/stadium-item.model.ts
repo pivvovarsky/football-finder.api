@@ -33,10 +33,3 @@ export class StadiumItem implements Stadium {
   @ApiProperty()
   teamId: string;
 }
-export class StadiumNameAndWebsiteUrlModel {
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  websiteUrl: string | null;
-}

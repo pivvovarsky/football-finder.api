@@ -40,6 +40,6 @@ export class MatchesController {
   @ListResponse(UpcomingMatchItem)
   @Get("upcoming")
   async getUpcommingMatches(@User() user: AuthPayload) {
-    return await this.matchesService.getFavouriteMatches(user.uid);
+    return await this.matchesService.getUpcomingWithFavouriteMatches(user.uid);
   }
 }

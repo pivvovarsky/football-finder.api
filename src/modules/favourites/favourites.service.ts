@@ -3,8 +3,6 @@ https://docs.nestjs.com/providers#services
 */
 
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { StadiumsService } from "../stadiums/stadiums.service";
-import { TeamsService } from "../teams/teams.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { FavouriteDetails } from "./models/favourite-details.model";
 import { Stadium, Team } from "src/generated/prisma/client/mongo";

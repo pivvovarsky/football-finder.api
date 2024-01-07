@@ -4,7 +4,6 @@ https://docs.nestjs.com/providers#services
 
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
-import { Match } from "src/generated/prisma/client/mongo";
 import { CreateMatchDto } from "./dto/create-match.dto";
 import { MatchItem } from "./models/match-item.model";
 import { UpcomingMatchItem } from "./models/upcoming-match-item.model";
@@ -32,7 +31,7 @@ export class MatchesService {
     return { data, count };
   }
 
-  public async getFavouriteMatches(userUid: string) {
+  public async getUpcomingWithFavouriteMatches(userUid: string) {
     if (!userUid) throw new BadRequestException("Enter correct userUid");
 
     const [favouriteTeams, favouriteStadiums] = await Promise.all([
@@ -60,7 +59,7 @@ export class MatchesService {
               imageUrl: true,
               league: true,
               country: true,
-              stadium: { select: { name: true, websiteUrl: true } },
+              stadium: true,
             },
           },
         },
@@ -86,7 +85,7 @@ export class MatchesService {
               imageUrl: true,
               league: true,
               country: true,
-              stadium: { select: { name: true, websiteUrl: true } },
+              stadium: true,
             },
           },
         },
