@@ -1,6 +1,6 @@
 # football-finder.api
 
-Football Finder App
+Football Finder App<br />
 Author: Szczepan Piwowarski
 
 ## Requirements
