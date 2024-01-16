@@ -114,31 +114,35 @@ export class NewslettersService {
 
     const mailPromises = usersWithNewsletterSubscribed.map(async (user) => {
       const upcomingMatches = await this.getFavouriteMatchesThisMonth(user.id);
-      const formattedMatches = upcomingMatches.data.map((match) => ({
-        host: { name: match.host.name },
-        guest: { name: match.guest.name },
-        date: dayjs(match.date).format("DD/MM/YYYY, HH:mm").toString(),
-        stadium: { name: match.host.stadium?.name || `${match.host.name} stadium` },
-      }));
+      if (upcomingMatches.count > 0 && upcomingMatches.data.length > 0) {
+        const formattedMatches = upcomingMatches.data.map((match) => ({
+          host: { name: match.host.name },
+          guest: { name: match.guest.name },
+          date: dayjs(match.date).format("DD/MM/YYYY, HH:mm").toString(),
+          stadium: { name: match.host.stadium?.name || `${match.host.name} stadium` },
+        }));
 
-      return this.mailerService
-        .sendMail({
-          to: user.email,
-          subject: `Football Finder - Monthly newsletter - ${monthFullName}`,
-          template: "newsletter",
-          context: {
-            name: user.email,
-            matches: formattedMatches,
-          },
-        })
-        .then(() => {
-          this.logger.debug("mail sent", user.email);
-        })
-        .catch((error) => {
-          this.logger.error("error", error);
-        });
+        return this.mailerService
+          .sendMail({
+            to: user.email,
+            subject: `Football Finder - Monthly newsletter - ${monthFullName}`,
+            template: "newsletter",
+            context: {
+              name: user.email,
+              matches: formattedMatches,
+            },
+          })
+          .then(() => {
+            this.logger.debug("mail sent", user.email);
+          })
+          .catch((error) => {
+            this.logger.error("error", error);
+          });
+      }
     });
 
-    await Promise.all(mailPromises);
+    if (mailPromises.length > 0) {
+      await Promise.all(mailPromises);
+    }
   }
 }
