@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
+import { IsNumber, IsString, MaxLength } from "class-validator";
 
 export class CreateStadiumDto {
   @IsString()
@@ -13,14 +13,14 @@ export class CreateStadiumDto {
 
   @IsString()
   @MaxLength(200)
-  description: string | null;
+  description: string;
 
   @IsString()
   @MaxLength(50)
   teamName: string;
 
   @IsString()
-  websiteUrl: string | null;
+  websiteUrl: string;
 
   @IsString()
   @MaxLength(50)

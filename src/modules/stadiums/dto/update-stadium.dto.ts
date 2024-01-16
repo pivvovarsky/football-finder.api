@@ -17,9 +17,9 @@ export class UpdateStadiumDto {
   @IsString()
   @IsOptional()
   @MaxLength(200)
-  description: string | null;
+  description?: string;
 
   @IsString()
   @IsOptional()
-  websiteUrl?: string | null;
+  websiteUrl?: string;
 }

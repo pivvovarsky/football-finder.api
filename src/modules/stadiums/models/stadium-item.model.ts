@@ -10,7 +10,7 @@ export class StadiumItem implements Stadium {
   imageUrl: string | null;
 
   @ApiProperty()
-  websiteUrl: string | null;
+  websiteUrl: string;
 
   @ApiProperty()
   name: string;
@@ -22,7 +22,7 @@ export class StadiumItem implements Stadium {
   longitude: number;
 
   @ApiProperty()
-  description: string | null;
+  description: string;
 
   @ApiProperty()
   createdAt: Date;

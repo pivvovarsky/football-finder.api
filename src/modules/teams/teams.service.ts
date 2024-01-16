@@ -18,13 +18,6 @@ export class TeamsService {
     }
   }
 
-  public async create(data: Prisma.TeamCreateInput) {
-    return await this.mongoPrismaService.team.create({
-      include: { stadium: true },
-      data: { ...data, stadium: { create: { name: data.name, latitude: 0, longitude: 0 } } },
-    });
-  }
-
   public async getMany(userUid: string) {
     const favoriteTeams = await this.mongoPrismaService.favoriteTeam.findMany({
       where: {
