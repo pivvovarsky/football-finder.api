@@ -106,11 +106,11 @@ describe("TeamsController", () => {
         stadium: {
           id: "",
           imageUrl: null,
-          websiteUrl: null,
+          websiteUrl: "http",
           name: "",
           latitude: 0,
           longitude: 0,
-          description: null,
+          description: "desc",
           createdAt: new Date(),
           updatedAt: new Date(),
           teamId: "123",

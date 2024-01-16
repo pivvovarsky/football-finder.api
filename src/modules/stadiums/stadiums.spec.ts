@@ -87,7 +87,7 @@ describe("StadiumsController", () => {
         updatedAt: NOW,
         teamId: mockTeam.id,
         imageUrl: null,
-        websiteUrl: null,
+        websiteUrl: "http/website",
       };
 
       const paramIdStadium = "1";
@@ -120,7 +120,7 @@ describe("StadiumsController", () => {
         latitude: 3333.3,
         longitude: 444.4,
         imageUrl: null,
-        websiteUrl: null,
+        websiteUrl: "http",
       };
 
       jest.spyOn(stadiumsService, "updateOne").mockResolvedValue(updatedStadium);
