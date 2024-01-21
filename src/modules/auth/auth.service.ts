@@ -36,7 +36,7 @@ export class AuthService {
 
   public async signUp(data: { email: string; password: string }) {
     const { email, password } = data;
-    const userExists = await this.prismaService.user.findFirst({ where: { email } });
+    const userExists = await this.prismaService.user.findUnique({ where: { email } });
     if (userExists) throw new ConflictException("User with this email already exists");
 
     let firebaseUserId: string | null = null;
