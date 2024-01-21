@@ -13,6 +13,7 @@ import { ApiConfigService } from "src/common/services/api-config.service";
 import { FirebaseAuthService } from "src/common/services/firebase/firebase-auth.service";
 import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import axios from "axios";
+import { User } from "src/generated/prisma/client/mongo";
 
 @Injectable()
 export class AuthService {
@@ -34,17 +35,31 @@ export class AuthService {
   }
 
   public async signUp(data: { email: string; password: string; firstName?: string; lastName?: string }) {
-    const { email } = data;
-    const userExists = await this.prismaService.user.findFirst({ where: { email: email } });
-    if (userExists) throw new ConflictException("User in use");
-    const firebaseUserId = await this.firebaseAuthSerivce.createUser(data);
+    const { email, password, firstName, lastName } = data;
+    const userExists = await this.prismaService.user.findFirst({ where: { email } });
+    if (userExists) throw new ConflictException("User with this email already exists");
 
-    return await this.prismaService.user.create({
-      data: {
-        id: firebaseUserId,
-        email: email,
-      },
-    });
+    let firebaseUserId: string | null = null;
+    let prismaUser: User | null = null;
+
+    try {
+      firebaseUserId = await this.firebaseAuthSerivce.createUser({ email, password, firstName, lastName });
+      prismaUser = await this.prismaService.user.create({
+        data: {
+          id: firebaseUserId,
+          email,
+        },
+      });
+    } catch (error) {
+      if (firebaseUserId) {
+        console.log(firebaseUserId);
+        await this.firebaseAuthSerivce.deleteUser(firebaseUserId);
+      }
+      const operation = firebaseUserId ? "Prisma" : "Firebase";
+      throw new InternalServerErrorException(`Failed to create ${operation} user`);
+    }
+
+    return prismaUser;
   }
 
   private async sendActivationMail(email: string) {

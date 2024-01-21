@@ -5,7 +5,7 @@ Author: Szczepan Piwowarski
 
 ## Requirements
 
-- Node v16
+- Node v16+
 
 ## Installation
 
@@ -34,7 +34,7 @@ $ npm run start:dev
 $ npm run test
 ```
 
-## Swagger api available by default after run
+## Swagger API documentation available by default after running locally:
 
 https://localhost:8080/api
 
