@@ -34,8 +34,8 @@ export class AuthService {
     }
   }
 
-  public async signUp(data: { email: string; password: string; firstName?: string; lastName?: string }) {
-    const { email, password, firstName, lastName } = data;
+  public async signUp(data: { email: string; password: string }) {
+    const { email, password } = data;
     const userExists = await this.prismaService.user.findFirst({ where: { email } });
     if (userExists) throw new ConflictException("User with this email already exists");
 
@@ -43,7 +43,7 @@ export class AuthService {
     let prismaUser: User | null = null;
 
     try {
-      firebaseUserId = await this.firebaseAuthSerivce.createUser({ email, password, firstName, lastName });
+      firebaseUserId = await this.firebaseAuthSerivce.createUser({ email, password });
       prismaUser = await this.prismaService.user.create({
         data: {
           id: firebaseUserId,
@@ -52,7 +52,6 @@ export class AuthService {
       });
     } catch (error) {
       if (firebaseUserId) {
-        console.log(firebaseUserId);
         await this.firebaseAuthSerivce.deleteUser(firebaseUserId);
       }
       const operation = firebaseUserId ? "Prisma" : "Firebase";

@@ -19,14 +19,13 @@ async function bootstrap() {
 
   const prismaService: MongoPrismaService = app.get(MongoPrismaService);
   prismaService.enableShutdownHooks(app);
-
   setupSwagger(app, configService);
 
   await app.listen(configService.api.port);
-
-  if (module.hot) {
-    module.hot.accept();
-    module.hot.dispose(() => app.close());
-  }
 }
 bootstrap().catch(console.error);
+
+// if (module.hot) {
+//   module.hot.accept();
+//   module.hot.dispose(() => app.close());
+// }

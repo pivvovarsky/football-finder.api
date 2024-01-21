@@ -25,9 +25,8 @@ export class AuthController {
   async signUp(@Body() body: RegisterDto): Promise<AuthModel> {
     const user = await this.authService.signUp(body);
 
-    if (!!user) {
-      this.authService.sendMail(Operation.SignUp, body.email);
-    }
+    this.authService.sendMail(Operation.SignUp, user.email);
+
     return user;
   }
 

@@ -25,13 +25,12 @@ export class FirebaseAuthService {
     firstName?: string;
     lastName?: string;
   }): Promise<string> {
-    const { email, password, firstName, lastName } = body;
+    const { email, password } = body;
 
     const user = await this.auth.createUser({
       email,
       password,
       emailVerified: false,
-      displayName: `${firstName ?? ""} ${lastName ?? ""}`,
     });
 
     return user.uid;
