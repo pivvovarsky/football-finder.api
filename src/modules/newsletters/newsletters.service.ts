@@ -39,8 +39,8 @@ export class NewslettersService {
     if (!userUid) throw new BadRequestException("Enter correct userUid");
 
     const [favouriteTeams, favouriteStadiums] = await Promise.all([
-      this.prismaService.favoriteTeam.findMany({ where: { userId: userUid } }),
-      this.prismaService.favoriteStadium.findMany({ where: { userId: userUid } }),
+      this.prismaService.favouriteTeam.findMany({ where: { userId: userUid } }),
+      this.prismaService.favouriteStadium.findMany({ where: { userId: userUid } }),
     ]);
 
     const today = new Date();
@@ -108,7 +108,7 @@ export class NewslettersService {
   public async sendNewsletter(): Promise<void> {
     const usersWithNewsletterSubscribed = await this.prismaService.user.findMany({
       where: { newsletterSubscribed: true },
-      include: { favoriteTeams: true, favoriteStadiums: true },
+      include: { favouriteTeams: true, favouriteStadiums: true },
     });
     const monthFullName = new Intl.DateTimeFormat("en-US", { month: "long" }).format(new Date());
 

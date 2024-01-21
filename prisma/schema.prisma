@@ -12,27 +12,27 @@ datasource db {
 }
 
 model User {
-  id                   String            @id @map("_id")
-  email                String            @unique
-  createdAt            DateTime          @default(now())
-  updatedAt            DateTime          @updatedAt
-  newsletterSubscribed Boolean           @default(false)
-  favoriteStadiums     FavoriteStadium[]
-  favoriteTeams        FavoriteTeam[]
+  id                   String             @id @map("_id")
+  email                String             @unique
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  newsletterSubscribed Boolean            @default(false)
+  favouriteStadiums    FavouriteStadium[]
+  favouriteTeams       FavouriteTeam[]
   ratings              Rating[]
 }
 
 model Team {
-  id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  imageUrl     String?
-  league       String
-  country      String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  hostMatches  Match[]        @relation("MatchHost")
-  guestMatches Match[]        @relation("MatchGuest")
-  favoriteTeam FavoriteTeam[]
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  imageUrl      String?
+  league        String
+  country       String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  hostMatches   Match[]         @relation("MatchHost")
+  guestMatches  Match[]         @relation("MatchGuest")
+  favouriteTeam FavouriteTeam[]
 
   stadium Stadium?
 }
@@ -49,9 +49,9 @@ model Stadium {
   updatedAt   DateTime @updatedAt
   ratings     Rating[]
 
-  teamId          String            @unique @db.ObjectId
-  team            Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  FavoriteStadium FavoriteStadium[]
+  teamId           String             @unique @db.ObjectId
+  team             Team               @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  favouriteStadium FavouriteStadium[]
 }
 
 model Match {
@@ -78,7 +78,7 @@ model Rating {
   updatedAt DateTime @updatedAt
 }
 
-model FavoriteStadium {
+model FavouriteStadium {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
@@ -89,7 +89,7 @@ model FavoriteStadium {
   updatedAt DateTime @updatedAt
 }
 
-model FavoriteTeam {
+model FavouriteTeam {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String

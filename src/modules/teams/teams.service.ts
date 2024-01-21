@@ -19,7 +19,7 @@ export class TeamsService {
   }
 
   public async getMany(userUid: string) {
-    const favoriteTeams = await this.mongoPrismaService.favoriteTeam.findMany({
+    const favouriteTeams = await this.mongoPrismaService.favouriteTeam.findMany({
       where: {
         userId: userUid,
       },
@@ -29,19 +29,19 @@ export class TeamsService {
       orderBy: { team: { name: SORT_BY } },
     });
 
-    const favoriteTeamObjects = favoriteTeams.map((favoriteTeam) => favoriteTeam.team);
-    const favoriteTeamIds = favoriteTeams.map((favoriteTeam) => favoriteTeam.teamId);
+    const favouriteTeamObjects = favouriteTeams.map((favouriteTeam) => favouriteTeam.team);
+    const favouriteTeamIds = favouriteTeams.map((favouriteTeam) => favouriteTeam.teamId);
 
     const otherTeams = await this.mongoPrismaService.team.findMany({
       where: {
         id: {
-          notIn: favoriteTeamIds,
+          notIn: favouriteTeamIds,
         },
       },
       orderBy: { name: SORT_BY },
     });
 
-    const allTeams: TeamItem[] = [...favoriteTeamObjects, ...otherTeams];
+    const allTeams: TeamItem[] = [...favouriteTeamObjects, ...otherTeams];
 
     return { data: allTeams, count: allTeams.length };
   }

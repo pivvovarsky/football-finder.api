@@ -22,21 +22,21 @@ export class FavouritesService {
 
   async unlikeTeam(userId: string, teamId: string): Promise<FavouriteDetails> {
     this.isValidID(teamId);
-    const favTeam = await this.prismaService.favoriteTeam.findFirstOrThrow({
+    const favTeam = await this.prismaService.favouriteTeam.findFirstOrThrow({
       where: {
         userId,
         teamId,
       },
     });
 
-    await this.prismaService.favoriteTeam.delete({ where: { id: favTeam.id } });
+    await this.prismaService.favouriteTeam.delete({ where: { id: favTeam.id } });
 
     return { liked: false };
   }
 
   async likeTeam(userId: string, teamId: string): Promise<FavouriteDetails> {
     this.isValidID(teamId);
-    await this.prismaService.favoriteTeam.create({
+    await this.prismaService.favouriteTeam.create({
       data: {
         userId,
         teamId,
@@ -48,21 +48,21 @@ export class FavouritesService {
 
   async unlikeStadium(userId: string, stadiumId: string): Promise<FavouriteDetails> {
     this.isValidID(stadiumId);
-    const favSt = await this.prismaService.favoriteStadium.findFirstOrThrow({
+    const favSt = await this.prismaService.favouriteStadium.findFirstOrThrow({
       where: {
         userId,
         stadiumId,
       },
     });
 
-    await this.prismaService.favoriteStadium.delete({ where: { id: favSt.id } });
+    await this.prismaService.favouriteStadium.delete({ where: { id: favSt.id } });
 
     return { liked: false };
   }
 
   async likeStadium(userId: string, stadiumId: string): Promise<FavouriteDetails> {
     this.isValidID(stadiumId);
-    await this.prismaService.favoriteStadium.create({
+    await this.prismaService.favouriteStadium.create({
       data: {
         userId,
         stadiumId,
@@ -74,31 +74,31 @@ export class FavouritesService {
 
   async getFavouriteTeams(userId: string): Promise<Team[]> {
     return this.prismaService.team.findMany({
-      where: { favoriteTeam: { some: { userId: userId } } },
+      where: { favouriteTeam: { some: { userId: userId } } },
     });
   }
 
   async getFavouriteTeamsCount(userId: string): Promise<number> {
     return this.prismaService.team.count({
-      where: { favoriteTeam: { some: { userId: userId } } },
+      where: { favouriteTeam: { some: { userId: userId } } },
     });
   }
 
   async getFavouriteStadiums(userId: string): Promise<Stadium[]> {
     return this.prismaService.stadium.findMany({
-      where: { FavoriteStadium: { some: { userId: userId } } },
+      where: { favouriteStadium: { some: { userId: userId } } },
     });
   }
 
   async getFavouriteStadiumsCount(userId: string): Promise<number> {
     return this.prismaService.stadium.count({
-      where: { FavoriteStadium: { some: { userId: userId } } },
+      where: { favouriteStadium: { some: { userId: userId } } },
     });
   }
 
   async favouriteStadium(userId: string, stadiumId: string): Promise<FavouriteDetails> {
     this.isValidID(stadiumId);
-    const alreadyLiked = await this.prismaService.favoriteStadium.findFirst({
+    const alreadyLiked = await this.prismaService.favouriteStadium.findFirst({
       where: {
         userId,
         stadiumId,
@@ -110,7 +110,7 @@ export class FavouritesService {
 
   async favouriteTeam(userId: string, teamId: string): Promise<FavouriteDetails> {
     this.isValidID(teamId);
-    const alreadyLiked = await this.prismaService.favoriteTeam.findFirst({
+    const alreadyLiked = await this.prismaService.favouriteTeam.findFirst({
       where: {
         userId,
         teamId,
@@ -125,7 +125,7 @@ export class FavouritesService {
     const stadium = await this.prismaService.stadium.findFirst({ where: { id: stadiumid } });
     const user = await this.prismaService.user.findFirstOrThrow({ where: { id: uuid } });
 
-    const alreadyLiked = await this.prismaService.favoriteStadium.findFirst({
+    const alreadyLiked = await this.prismaService.favouriteStadium.findFirst({
       where: {
         userId: uuid,
         stadiumId: stadium?.id,
@@ -139,7 +139,7 @@ export class FavouritesService {
   async getFavouriteTeam(uuid: string, teamId: string): Promise<FavouriteDetails> {
     this.isValidID(teamId);
     const team = await this.prismaService.team.findFirst({ where: { id: teamId } });
-    const alreadyLiked = await this.prismaService.favoriteTeam.findFirst({
+    const alreadyLiked = await this.prismaService.favouriteTeam.findFirst({
       where: {
         userId: uuid,
         teamId: team?.id,

@@ -35,8 +35,8 @@ export class MatchesService {
     if (!userUid) throw new BadRequestException("Enter correct userUid");
 
     const [favouriteTeams, favouriteStadiums] = await Promise.all([
-      this.mongoPrismaService.favoriteTeam.findMany({ where: { userId: userUid } }),
-      this.mongoPrismaService.favoriteStadium.findMany({ where: { userId: userUid } }),
+      this.mongoPrismaService.favouriteTeam.findMany({ where: { userId: userUid } }),
+      this.mongoPrismaService.favouriteStadium.findMany({ where: { userId: userUid } }),
     ]);
 
     const today = new Date();
