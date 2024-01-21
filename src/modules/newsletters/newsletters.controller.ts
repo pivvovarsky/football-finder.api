@@ -18,21 +18,18 @@ export class NewslettersController {
   constructor(private newslettersSerivce: NewslettersService) {}
 
   @FirebaseJWTGuard()
-  @ApiOperation({ summary: "Get information about the user's subscription." })
   @Get("me/subscription")
   async getMySubscription(@User() user: AuthPayload): Promise<SubscribeNewsletterModel> {
     return await this.newslettersSerivce.getMySubscription(user.uid);
   }
 
   @FirebaseJWTGuard()
-  @ApiOperation({ summary: "User subscription to the newsletter" })
   @Patch("me/subscription")
   async subscribeNewsletter(@User() user: AuthPayload, @Body() body: SubscribeNewsletterDto): Promise<void> {
     this.newslettersSerivce.subscribeNewsletter(user.uid, body.newsletterSubscribed);
   }
 
   @ApiKeyGuard()
-  @ApiOperation({ summary: "Manual sending of newsletters to users" })
   @Post()
   async sendNewsletterToUsers(): Promise<void> {
     await this.newslettersSerivce.sendNewsletter();

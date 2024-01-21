@@ -19,7 +19,6 @@ export class StadiumsController {
   constructor(private stadiumsService: StadiumsService) {}
 
   @Public()
-  @ApiOperation({ summary: "Get all the stadiums" })
   @ListResponse(StadiumItem)
   @Get()
   async getMany() {
@@ -27,21 +26,18 @@ export class StadiumsController {
   }
 
   @FirebaseJWTGuard()
-  @ApiOperation({ summary: "Get one stadium" })
   @Get(":id")
   async getOne(@Param("id") id: string): Promise<StadiumItem> {
     return await this.stadiumsService.getOne(id);
   }
 
   @ApiKeyGuard()
-  @ApiOperation({ summary: "Update the stadium" })
   @Put(":id")
   async update(@Param("id") id: string, @Body() body: UpdateStadiumDto): Promise<StadiumItem> {
     return await this.stadiumsService.updateOne(id, body);
   }
 
   @ApiKeyGuard()
-  @ApiOperation({ summary: "Create the stadium" })
   @Post()
   async create(@Body() body: CreateStadiumDto): Promise<StadiumItem> {
     const data: Prisma.StadiumCreateInput = {
@@ -59,7 +55,6 @@ export class StadiumsController {
   }
 
   @ApiKeyGuard()
-  @ApiOperation({ summary: "Upload an image for the stadium" })
   @Post(":id/image")
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -79,14 +74,12 @@ export class StadiumsController {
   }
 
   @ApiKeyGuard()
-  @ApiOperation({ summary: "Get uploaded image" })
   @Get(":id/imageUrl")
   async getUrlImage(@Param("id") id: string): Promise<StadiumImageModel> {
     return await this.stadiumsService.getUrlImage(id);
   }
 
   @FirebaseJWTGuard()
-  @ApiOperation({ summary: "Get next match at the stadium" })
   @Get(":id/next-match")
   async getNextMatch(@Param("id") id: string): Promise<NextMatchModel> {
     return await this.stadiumsService.getNextMatch(id);

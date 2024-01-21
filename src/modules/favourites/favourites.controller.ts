@@ -17,7 +17,6 @@ import { FavouriteDetails } from "./models/favourite-details.model";
 @Controller("users")
 export class FavouritesController {
   constructor(private favouritesService: FavouritesService) {}
-  @ApiOperation({ summary: "Get the user's favourite stadiums" })
   @Get("me/favourite-stadiums")
   @ListResponse(StadiumItem)
   async getMyFavouriteStadiums(@User() user: AuthPayload) {
@@ -29,7 +28,6 @@ export class FavouritesController {
     return { count: stadiumsCount, data: stadiumsList };
   }
 
-  @ApiOperation({ summary: "Get the user's favourite teams" })
   @ListResponse(TeamItem)
   @Get("me/favourite-teams")
   async getMyFavouriteTeams(@User() user: AuthPayload) {
@@ -41,25 +39,21 @@ export class FavouritesController {
     return { count: teamsCount, data: teamsList };
   }
 
-  @ApiOperation({ summary: "Add team to user's favourite teams" })
   @Put("me/favourite-teams/:id")
   async likeTeam(@Param("id") id: string, @User() user: AuthPayload): Promise<FavouriteDetails> {
     return await this.favouritesService.favouriteTeam(user.uid, id);
   }
 
-  @ApiOperation({ summary: "Add stadium to user's favourite stadiums" })
   @Put("me/favourite-stadiums/:id")
   async likeStadium(@Param("id") id: string, @User() user: AuthPayload): Promise<FavouriteDetails> {
     return await this.favouritesService.favouriteStadium(user.uid, id);
   }
 
-  @ApiOperation({ summary: "Get user's favourite stadium" })
   @Get("me/favourite-stadiums/:id")
   async getFavouriteStadium(@Param("id") id: string, @User() user: AuthPayload): Promise<FavouriteDetails> {
     return await this.favouritesService.getFavouriteStadium(user.uid, id);
   }
 
-  @ApiOperation({ summary: "Get user's favourite team" })
   @Get("me/favourite-teams/:id")
   async getFavouriteTeam(@Param("id") id: string, @User() user: AuthPayload): Promise<FavouriteDetails> {
     return await this.favouritesService.getFavouriteTeam(user.uid, id);

@@ -21,7 +21,6 @@ export class AuthController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post("register")
-  @ApiOperation({ summary: "Create an account" })
   async signUp(@Body() body: RegisterDto): Promise<AuthModel> {
     const user = await this.authService.signUp(body);
 
@@ -32,21 +31,18 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post("forgot-password")
-  @ApiOperation({ summary: "Reset password" })
   async forgotPassword(@Body() body: ForgotPasswordDto): Promise<void> {
     await this.authService.sendMail(Operation.ForgotPassword, body.email);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post("login")
-  @ApiOperation({ summary: "Logging via api" })
   async login(@Body() body: LoginDto): Promise<AuthLoginModel> {
     return await this.authService.login(body);
   }
 
   @FirebaseJWTGuard()
   @Post("me/change-password")
-  @ApiOperation({ summary: "Change password" })
   async changePassword(@User() user: AuthPayload, @Body() body: ChangePasswordDto): Promise<void> {
     const data = { id: user.uid, newPassword: body.password };
     await this.authService.changePassword(data);

@@ -19,7 +19,6 @@ import { ApiKeyGuard } from "src/common/decorators/guards/api-key.decorator";
 export class MatchesController {
   constructor(private matchesService: MatchesService) {}
 
-  @ApiOperation({ summary: "Get all the matches" })
   @ApiKeyGuard()
   @ListResponse(MatchItem)
   @Get()
@@ -27,14 +26,12 @@ export class MatchesController {
     return await this.matchesService.getMany();
   }
 
-  @ApiOperation({ summary: "Create the match" })
   @ApiKeyGuard()
   @Post()
   async create(@Body() body: CreateMatchDto): Promise<MatchItem> {
     return await this.matchesService.createOne(body);
   }
 
-  @ApiOperation({ summary: "Get favourite upcoming matches" })
   @FirebaseJWTGuard()
   @ApiExtraModels(UpcomingMatchItem)
   @ListResponse(UpcomingMatchItem)

@@ -17,14 +17,12 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @ApiKeyGuard()
-  @ApiOperation({ summary: "Get all users" })
   @Get()
   async getAllUsers(): Promise<UserModel[]> {
     return await this.usersService.getMany();
   }
 
   @FirebaseJWTGuard()
-  @ApiOperation({ summary: "Get my user" })
   @Get("/me")
   async getOne(@User("uid") userUid: AuthPayload["uid"]): Promise<UserModel | null> {
     return await this.usersService.getOne(userUid);
