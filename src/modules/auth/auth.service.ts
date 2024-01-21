@@ -66,9 +66,8 @@ export class AuthService {
     const firebaseUser = await this.firebaseAuthSerivce.getUserByEmail(email);
     if (!!firebaseUser.email) {
       const activationLink = await this.firebaseAuthSerivce.getActivationLink(firebaseUser.email);
-
-      await this.mailerService
-        .sendMail({
+      try {
+        await this.mailerService.sendMail({
           to: firebaseUser.email,
           subject: "Football Finder - Activate your Account",
           template: "activate-account",
@@ -76,13 +75,11 @@ export class AuthService {
             name: firebaseUser.email,
             link: activationLink,
           },
-        })
-        .then(() => {
-          this.logger.debug("mail sent", firebaseUser.email);
-        })
-        .catch((error) => {
-          this.logger.error("error", error);
         });
+        this.logger.debug("mail sent", firebaseUser.email);
+      } catch (error) {
+        this.logger.error("error", error);
+      }
     } else throw new NotFoundException();
   }
 
