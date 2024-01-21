@@ -18,7 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "delete-users": "npm run build && node ./dist/commands delete-users"
+    "delete-users": "npm run build && node ./dist/commands delete-users",
+    "generate-future-matches": "npm run build && node ./dist/commands generate-future-matches",
+    "delete-matches": "npm run build && node ./dist/commands delete-matches"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.8.1",
@@ -48,6 +50,7 @@
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",

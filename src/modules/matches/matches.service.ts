@@ -25,6 +25,10 @@ export class MatchesService {
     return await this.mongoPrismaService.match.create({ data });
   }
 
+  public async createMany(data: CreateMatchDto[]) {
+    await this.mongoPrismaService.match.createMany({ data });
+  }
+
   public async getMany() {
     const data = await this.mongoPrismaService.match.findMany({});
     const count = await this.mongoPrismaService.match.count();
