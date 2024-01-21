@@ -18,7 +18,26 @@ export class TeamsService {
     }
   }
 
-  public async getMany(userUid: string) {
+  public async getMany() {
+    const [teams, teamsCount] = await Promise.all([
+      this.mongoPrismaService.team.findMany({}),
+      this.mongoPrismaService.team.count({}),
+    ]);
+    return { data: teams, count: teamsCount };
+  }
+
+  public async getManyFavouriteFirst(userUid: string) {
+    const favouriteTeams = await this.getFavouriteTeams(userUid);
+    const favouriteTeamIds = favouriteTeams.map((team) => team.id);
+
+    const nonFavouriteTeams = await this.getNonFavouriteTeams(favouriteTeamIds);
+
+    const allTeamsFavouriteFirst: TeamItem[] = [...favouriteTeams, ...nonFavouriteTeams];
+
+    return { data: allTeamsFavouriteFirst, count: allTeamsFavouriteFirst.length };
+  }
+
+  private async getFavouriteTeams(userUid: string) {
     const favouriteTeams = await this.mongoPrismaService.favouriteTeam.findMany({
       where: {
         userId: userUid,
@@ -29,10 +48,11 @@ export class TeamsService {
       orderBy: { team: { name: SORT_BY } },
     });
 
-    const favouriteTeamObjects = favouriteTeams.map((favouriteTeam) => favouriteTeam.team);
-    const favouriteTeamIds = favouriteTeams.map((favouriteTeam) => favouriteTeam.teamId);
+    return favouriteTeams.map((favouriteTeam) => favouriteTeam.team);
+  }
 
-    const otherTeams = await this.mongoPrismaService.team.findMany({
+  private async getNonFavouriteTeams(favouriteTeamIds: string[]) {
+    return this.mongoPrismaService.team.findMany({
       where: {
         id: {
           notIn: favouriteTeamIds,
@@ -40,10 +60,6 @@ export class TeamsService {
       },
       orderBy: { name: SORT_BY },
     });
-
-    const allTeams: TeamItem[] = [...favouriteTeamObjects, ...otherTeams];
-
-    return { data: allTeams, count: allTeams.length };
   }
 
   public async getOne(id: string) {

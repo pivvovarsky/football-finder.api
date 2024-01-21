@@ -7,9 +7,7 @@ import { FirebaseService } from "src/common/services/firebase/firebase.service";
 import { ApiConfigService } from "src/common/services/api-config.service";
 import { ConfigService } from "@nestjs/config";
 import { IConfig } from "src/config/config.interface";
-import { TeamItem } from "./models/team-item.model";
 import { AuthPayload } from "../auth/models/auth-payload.model";
-import { StadiumItem } from "../stadiums/models/stadium-item.model";
 jest.mock("@nestjs/config");
 jest.mock("src/common/services/mongo-prisma.service.ts");
 jest.mock("src/common/services/api-config.service.ts");
@@ -80,14 +78,14 @@ describe("TeamsController", () => {
         },
       ];
 
-      jest.spyOn(teamsService, "getMany").mockResolvedValue({ data: mockTeams, count: mockTeams.length });
+      jest.spyOn(teamsService, "getManyFavouriteFirst").mockResolvedValue({ data: mockTeams, count: mockTeams.length });
       const payload: AuthPayload = {
         uid: "",
         email: "",
         name: "",
         email_verified: false,
       };
-      const result = await teamsController.getMany(payload);
+      const result = await teamsController.getManyFavouriteFirst(payload);
 
       expect(result).toStrictEqual({ data: mockTeams, count: mockTeams.length });
     });

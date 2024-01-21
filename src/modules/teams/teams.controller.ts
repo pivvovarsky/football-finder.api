@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { TeamsService } from "./teams.service";
 import { ApiBody, ApiConsumes, ApiExtraModels, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Team } from "src/generated/prisma/client/mongo";
@@ -22,8 +22,16 @@ export class TeamsController {
   @ApiExtraModels(TeamItem)
   @ListResponse(TeamItem)
   @Get()
-  async getMany(@User() user: AuthPayload) {
-    return await this.teamsService.getMany(user.uid);
+  async getMany() {
+    return await this.teamsService.getMany();
+  }
+
+  @FirebaseJWTGuard()
+  @ApiExtraModels(TeamItem)
+  @ListResponse(TeamItem)
+  @Get("/favourite-first")
+  async getManyFavouriteFirst(@User() user: AuthPayload) {
+    return await this.teamsService.getManyFavouriteFirst(user.uid);
   }
 
   @Get(":id")
