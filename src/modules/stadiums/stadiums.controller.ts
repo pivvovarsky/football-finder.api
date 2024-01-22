@@ -40,14 +40,11 @@ export class StadiumsController {
   @ApiKeyGuard()
   @Post()
   async create(@Body() body: CreateStadiumDto): Promise<StadiumItem> {
+    const { teamName, league, country, ...stadium } = body;
     const data: Prisma.StadiumCreateInput = {
-      name: body.name,
-      latitude: body.latitude,
-      longitude: body.longitude,
-      description: body.description,
-      websiteUrl: body.websiteUrl,
+      ...stadium,
       team: {
-        create: { name: body.teamName, league: body.league, country: body.country },
+        create: { name: teamName, league, country },
       },
     };
 

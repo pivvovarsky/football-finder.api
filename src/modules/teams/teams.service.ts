@@ -29,9 +29,7 @@ export class TeamsService {
   public async getManyFavouriteFirst(userUid: string) {
     const favouriteTeams = await this.getFavouriteTeams(userUid);
     const favouriteTeamIds = favouriteTeams.map((team) => team.id);
-
     const nonFavouriteTeams = await this.getNonFavouriteTeams(favouriteTeamIds);
-
     const allTeamsFavouriteFirst: TeamItem[] = [...favouriteTeams, ...nonFavouriteTeams];
 
     return { data: allTeamsFavouriteFirst, count: allTeamsFavouriteFirst.length };
