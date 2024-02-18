@@ -1,4 +1,4 @@
-import { IsNumber, IsString, MaxLength } from "class-validator";
+import { IsLatitude, IsLongitude, IsNumber, IsString, IsUrl, MaxLength } from "class-validator";
 
 export class CreateStadiumDto {
   @IsString()
@@ -6,9 +6,11 @@ export class CreateStadiumDto {
   name: string;
 
   @IsNumber()
+  @IsLatitude()
   latitude: number;
 
   @IsNumber()
+  @IsLongitude()
   longitude: number;
 
   @IsString()
@@ -20,6 +22,7 @@ export class CreateStadiumDto {
   teamName: string;
 
   @IsString()
+  @IsUrl()
   websiteUrl: string;
 
   @IsString()

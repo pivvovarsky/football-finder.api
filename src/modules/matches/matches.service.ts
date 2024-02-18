@@ -7,11 +7,19 @@ import { MongoPrismaService } from "src/common/services/mongo-prisma.service";
 import { CreateMatchDto } from "./dto/create-match.dto";
 import { MatchItem } from "./models/match-item.model";
 import { UpcomingMatchItem } from "./models/upcoming-match-item.model";
+import { ObjectId } from "mongodb";
 
 const MAX_SIZE = 2;
 @Injectable()
 export class MatchesService {
   constructor(private mongoPrismaService: MongoPrismaService) {}
+  private isValidID(id: string) {
+    if (!ObjectId.isValid(id)) {
+      throw new BadRequestException(
+        "Invalid ID - ObjectID: provided hex string representation must be exactly 12 bytes",
+      );
+    }
+  }
 
   public async createOne(data: CreateMatchDto): Promise<MatchItem> {
     if (data.hostId === data.guestId) throw new BadRequestException("Host and Guest cannot be the same");
